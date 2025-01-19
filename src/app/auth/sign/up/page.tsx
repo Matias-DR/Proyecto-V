@@ -7,7 +7,7 @@ import { z } from 'zod'
 const Page = () => {
   return (
     <div className='flex flex-col gap-4'>
-      <h1 className='text-center text-4xl'>Registrate</h1>
+      <h1 className='gradient-text animate-gradient text-center text-4xl'>Registrate</h1>
       <FormComponent
         usePostController={usePostSignUpController}
         schema={{

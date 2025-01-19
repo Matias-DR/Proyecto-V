@@ -45,9 +45,12 @@ export const FormComponent = ({ usePostController, schema }: Props) => {
           name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre</FormLabel>
+              <FormLabel className='font-bold text-blue-400'>Nombre</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  {...field}
+                  className='text-blue-500 font-bold border-blue-400'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -58,11 +61,12 @@ export const FormComponent = ({ usePostController, schema }: Props) => {
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contraseña</FormLabel>
+              <FormLabel className='font-bold text-blue-400'>Contraseña</FormLabel>
               <FormControl>
                 <Input
                   type='password'
                   {...field}
+                  className='text-blue-500 font-bold border-blue-400'
                 />
               </FormControl>
               <FormMessage />
@@ -73,7 +77,7 @@ export const FormComponent = ({ usePostController, schema }: Props) => {
           <Button
             disabled={disabled}
             type='submit'
-            className='font-bold'
+            className='text-blue-400 font-bold bg-transparent border-2 border-blue-400 hover:bg-blue-200 hover:text-blue-500'
           >
             Enviar
           </Button>

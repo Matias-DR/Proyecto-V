@@ -47,12 +47,25 @@ export default {
           '5': 'hsl(var(--chart-5))'
         }
       },
+      backgroundImage: {
+        heroes: 'url(/heroes/06.png)'
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
+      },
+      keyframes: {
+        gradient: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '100% 50%' }
+        }
+      },
+      animation: {
+        gradient: 'gradient 4s linear infinite'
       }
     }
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require('tailwindcss-animate')]
 } satisfies Config
