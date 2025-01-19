@@ -13,7 +13,7 @@ export const usePostSignUpController = () => {
 
   const mutation = useMutation({
     mutationFn: postSignUpController,
-    onSuccess: () => push('auth/sign/in?registered=true'),
+    onSuccess: () => push('/auth/sign/in?registered=true'),
     onError(error) {
       if (error instanceof AxiosError) {
         if (error.status === 409) toast({ title: 'Error', description: 'Usuario existente. Por favor ingrese otro nombre.' })
