@@ -5,6 +5,7 @@ import db from '@/infra/mongodb'
 
 import { PostSignUpBody } from '@/core/auth/api'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
+import { hashPassword } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as PostSignUpBody
@@ -12,6 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const connection = await db()
     const collection = connection.collection(COLLECTION_NAMES.users)
+    body.password = await hashPassword(body.password)
     await collection.insertOne(body)
     return NextResponse.json({}, { status: 201 })
   } catch (err) {

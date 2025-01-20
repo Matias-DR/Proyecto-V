@@ -11,4 +11,7 @@ export interface PostSignInResponse {
   refresh: string
 }
 
-export type PostRefreshResponse = string
+export type PostRefreshResponse = {
+  access: string
+  refresh: string
+}

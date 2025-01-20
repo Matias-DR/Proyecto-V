@@ -1,5 +1,6 @@
-import { CommonPostSignBody, PostRefreshResponse, PostSignUpBody } from '@/core/auth/api'
 import api from '@/infra/axios'
+
+import { CommonPostSignBody, PostRefreshResponse, PostSignInBody, PostSignUpBody } from '@/core/auth/api'
 
 export interface CommonPostSignControllerProps {
   body: CommonPostSignBody
@@ -9,12 +10,20 @@ export interface PostSignUpControllerProps {
   body: PostSignUpBody
 }
 
+export interface PostSignInControllerProps {
+  body: PostSignInBody
+}
+
 export interface PostRefreshControllerProps {
   refresh: string
 }
 
 export const postSignUpController = async ({ body }: PostSignUpControllerProps) => {
   return api.post('/api/auth/sign/up', body).then((res) => res.data)
+}
+
+export const postSignInController = async ({ body }: PostSignInControllerProps) => {
+  return api.post('/api/auth/sign/in', body).then((res) => res.data)
 }
 
 export const postRefreshController = async ({ refresh }: PostRefreshControllerProps): Promise<PostRefreshResponse> => {
