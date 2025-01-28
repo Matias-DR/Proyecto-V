@@ -246,7 +246,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
         >
           <Command>
             <CommandInput
-              placeholder='Search...'
+              placeholder='Buscar...'
               onKeyDown={handleInputKeyDown}
             />
             <CommandList>
@@ -310,7 +310,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                     onSelect={() => setIsPopoverOpen(false)}
                     className='flex-1 justify-center cursor-pointer max-w-full'
                   >
-                    Cerrar
+                    Aceptar
                   </CommandItem>
                 </div>
               </CommandGroup>

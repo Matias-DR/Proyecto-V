@@ -1,13 +1,25 @@
 'use client'
 
+import Link from 'next/link'
+
+import { z } from 'zod'
+
 import { SignForm } from '@/components/auth/sign/form'
 import { usePostSignUpController } from '@/hooks/auth'
-import { z } from 'zod'
 
 const Page = () => {
   return (
     <div className='flex flex-col gap-4'>
       <h1 className='gradient-text animate-gradient text-center text-4xl'>Registrate</h1>
+      <p className='text-blue-400 font-bold text-center'>
+        Ya tenés usuario?{' '}
+        <Link
+          href='/auth/sign/in'
+          className='gradient-text animate-gradient'
+        >
+          Ingresa
+        </Link>
+      </p>
       <SignForm
         usePostController={usePostSignUpController}
         schema={{

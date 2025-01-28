@@ -2,12 +2,22 @@
 
 import { SignForm } from '@/components/auth/sign/form'
 import { usePostSignInController } from '@/hooks/auth'
+import Link from 'next/link'
 import { z } from 'zod'
 
 const Page = () => {
   return (
     <div className='flex flex-col gap-4'>
       <h1 className='gradient-text animate-gradient text-center text-4xl'>Ingresar</h1>
+      <p className='text-blue-400 font-bold text-center'>
+        No tenés usuario?{' '}
+        <Link
+          href='/auth/sign/up'
+          className='gradient-text animate-gradient'
+        >
+          Registrate
+        </Link>
+      </p>
       <SignForm
         usePostController={usePostSignInController}
         schema={{
