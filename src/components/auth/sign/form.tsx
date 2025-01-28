@@ -16,7 +16,7 @@ export interface Props {
   schema: ZodRawShape
 }
 
-export const FormComponent = ({ usePostController, schema }: Props) => {
+export const SignForm = ({ usePostController, schema }: Props) => {
   const [disabled, setDisabled] = useState(false)
   const { mutate } = usePostController()
   const formSchema = useMemo(() => z.object(schema), [schema])
@@ -77,7 +77,7 @@ export const FormComponent = ({ usePostController, schema }: Props) => {
           <Button
             disabled={disabled}
             type='submit'
-            className='text-blue-400 font-bold bg-transparent border-2 border-blue-400 hover:bg-blue-200 hover:text-blue-500'
+            className='text-white font-bold bg-blue-400 border-blue-400 hover:bg-blue-300 hover:text-blue-600'
           >
             Enviar
           </Button>

@@ -48,7 +48,8 @@ export default {
         }
       },
       backgroundImage: {
-        heroes: 'url(/heroes/06.png)'
+        heroes: 'url(/heroes/06.png)',
+        'post-form': 'url(/heroes/04.png)'
       },
       borderRadius: {
         lg: 'var(--radius)',

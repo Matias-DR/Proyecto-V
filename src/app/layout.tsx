@@ -18,16 +18,11 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Autenticación',
+  title: 'Héroes',
   description: 'Héroes'
 }
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
+const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     <html
       lang='en'
       suppressHydrationWarning
@@ -38,10 +33,13 @@ export default function RootLayout({
           defaultTheme='dark'
           disableTransitionOnChange
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+          </QueryProvider>
         </ThemeProvider>
         <Toaster />
       </body>
     </html>
   )
-}
+
+export default RootLayout

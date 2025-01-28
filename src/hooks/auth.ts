@@ -3,7 +3,7 @@
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
-import { postSignInController, postSignUpController } from '@/controllers/auth'
+import { postSignInController, postSignOutController, postSignUpController } from '@/controllers/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from './use-toast'
 
@@ -31,14 +31,26 @@ export const usePostSignInController = () => {
 
   const mutation = useMutation({
     mutationFn: postSignInController,
-    onSuccess: () => push('/'),
+    onSuccess: () => push('/post/create'),
     onError(error) {
       if (error instanceof AxiosError) {
-        console.log(error.status)
         if (error.status === 404) toast({ title: 'Error', description: 'Nombre y/o contraseña incorrecta.' })
         else toast({ title: 'Error', description: 'No se pudo iniciar sesión. Por favor intente mas tarde.' })
       }
     }
+  })
+
+  return mutation
+}
+
+export const usePostSignOutController = () => {
+  const { toast } = useToast()
+  const { push } = useRouter()
+
+  const mutation = useMutation({
+    mutationFn: postSignOutController,
+    onSuccess: () => push('/auth/sign/in'),
+    onError: () => toast({ title: 'Error', description: 'Ah ocurrido un error inesperado.' })
   })
 
   return mutation

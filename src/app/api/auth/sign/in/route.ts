@@ -31,8 +31,14 @@ export async function POST(req: NextRequest) {
     const sessionsCollection = connection.collection(COLLECTION_NAMES.sessions)
     // Guardamos el nombre de usuario y el refresh en la base de datos
     sessionsCollection.insertOne({ name: body.name, refresh })
-    // Respondemos 200 y enviamos el access
-    const res = NextResponse.json({ access }, { status: 200 })
+    // Guardamos las cookies y respondemos 200
+    const res = NextResponse.json({}, { status: 200 })
+    res.cookies.set('access', access, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 15 * 60
+    })
     res.cookies.set('refresh', refresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
