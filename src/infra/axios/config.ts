@@ -23,6 +23,7 @@ const client = (api: AxiosInstance) => {
     async (error) => {
       const originalRequest = error.config
 
+      console.log('TENEMOS ESTE CODIGO DE ERROR', error.response && error.response.status)
       // Si el error es 401, refrescamos los tokens
       if (error.response && error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true // Bandera para evitar bucles infinitos
