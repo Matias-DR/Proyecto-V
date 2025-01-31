@@ -1,31 +1,18 @@
-import { jwtVerify } from 'jose'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
-import { NextRequest, NextResponse } from 'next/server'
-
-// import { POST } from '@/app/api/auth/refresh/route'
 import { FRONTEND_URL } from './infra/config'
 
-export default async function middleware(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const access = req.cookies.get('access')?.value
 
-  if (!access) return NextResponse.redirect(`${FRONTEND_URL}/auth/sign/in`)
-  // if (!access)
-  //   try {
-  //     await POST(req)
-  //     return NextResponse.next()
-  //   } catch {
-  //     return NextResponse.redirect(`${FRONTEND_URL}/auth/sign/out`)
-  //   }
+  console.log(req.nextUrl.pathname)
 
-  try {
-    const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!)
-    jwtVerify(access, secret)
-    return NextResponse.next()
-  } catch {
-    return NextResponse.redirect(`${FRONTEND_URL}/auth/sign/out`)
-  }
+  const isAuth = req.nextUrl.pathname.startsWith('/auth')
+  if (isAuth && access) return NextResponse.redirect(FRONTEND_URL!)
+  if (!isAuth && !access) return NextResponse.redirect(`${FRONTEND_URL!}/auth/sign/in`)
+
+  return NextResponse.next()
 }
 
-export const config = {
-  matcher: ['/((?!auth|api/auth|heroes|_next/|favicon.ico|api/post/image/.*).*)']
-}
+export const config = { matcher: ['/((?!api|_next/static|_next/image|favicon.ico|heroes/.*).*)'] }

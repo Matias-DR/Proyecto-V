@@ -7,7 +7,7 @@ import db from '@/infra/mongodb'
 import { Session } from '@/core/auth'
 import { FRONTEND_URL } from '@/infra/config'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
-import { generateAccessToken, generateRefreshToken } from '@/lib/utils'
+import { generateAccessToken, generateRefreshToken, setTokensOnNextResponse } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   // Si no hay refresh redireccionamos a sign/out
@@ -46,18 +46,7 @@ export async function POST(req: NextRequest) {
       if (!sessionsRes.modifiedCount) return NextResponse.json({}, { status: 500 })
 
       const res = NextResponse.json({}, { status: 200 })
-      res.cookies.set('access', newAccess, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 15 * 60
-      })
-      res.cookies.set('refresh', newRefresh, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 24 * 60 * 60
-      })
+      setTokensOnNextResponse(res, newAccess, newRefresh)
       return res
     } catch {
       return NextResponse.json({}, { status: 500 })

@@ -3,9 +3,13 @@
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
-import { postSignInController, postSignOutController, postSignUpController } from '@/controllers/auth'
+import { postRefreshController, postSignInController, postSignOutController, postSignUpController } from '@/controllers/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from './use-toast'
+
+export interface UsePostRefreshController {
+  nextURL: string
+}
 
 export const usePostSignUpController = () => {
   const { toast } = useToast()
@@ -50,6 +54,19 @@ export const usePostSignOutController = () => {
   const mutation = useMutation({
     mutationFn: postSignOutController,
     onSuccess: () => push('/auth/sign/in'),
+    onError: () => toast({ title: 'Error', description: 'Ah ocurrido un error inesperado.' })
+  })
+
+  return mutation
+}
+
+export const usePostRefreshController = ({ nextURL }: UsePostRefreshController) => {
+  const { toast } = useToast()
+  const { replace } = useRouter()
+
+  const mutation = useMutation({
+    mutationFn: postRefreshController,
+    onSuccess: () => replace(nextURL),
     onError: () => toast({ title: 'Error', description: 'Ah ocurrido un error inesperado.' })
   })
 

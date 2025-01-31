@@ -6,7 +6,7 @@ import db from '@/infra/mongodb'
 import { PostSignInBody } from '@/core/auth/api'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 import { Credentials } from '@/core/auth'
-import { generateAccessToken, generateRefreshToken, verifyPassword } from '@/lib/utils'
+import { generateAccessToken, generateRefreshToken, setTokensOnNextResponse, verifyPassword } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as PostSignInBody
@@ -33,18 +33,7 @@ export async function POST(req: NextRequest) {
     sessionsCollection.insertOne({ name: body.name, refresh })
     // Guardamos las cookies y respondemos 200
     const res = NextResponse.json({}, { status: 200 })
-    res.cookies.set('access', access, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60
-    })
-    res.cookies.set('refresh', refresh, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60
-    })
+    setTokensOnNextResponse(res, access, refresh)
     return res
   } catch (err) {
     console.error('Error establishing server connection', err)

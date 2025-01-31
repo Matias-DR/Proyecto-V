@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs'
 import { faker } from '@faker-js/faker'
 import { clsx, type ClassValue } from 'clsx'
 import { decode, JwtPayload, sign } from 'jsonwebtoken'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -36,4 +36,19 @@ export const getNameFromNextRequest = (req: NextRequest): string => {
   const access = req.cookies.get('access')!.value
   const { name } = decode(access) as JwtPayload & { name: string }
   return name
+}
+
+export const setTokensOnNextResponse = (res: NextResponse, access: string, refresh: string): void => {
+  res.cookies.set('access', access, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60
+  })
+  res.cookies.set('refresh', refresh, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60
+  })
 }
