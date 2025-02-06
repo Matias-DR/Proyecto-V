@@ -107,7 +107,7 @@ export function PostForm({ usePostController, schema }: Props) {
               <FormLabel className='font-bold text-blue-400'>Región</FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={CONTINENTS.map((category) => ({ label: category, value: category }))}
+                  options={CONTINENTS.map((continent) => ({ label: continent, value: continent }))}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   variant='inverted'
@@ -128,7 +128,7 @@ export function PostForm({ usePostController, schema }: Props) {
               <FormLabel className='font-bold text-blue-400'>País</FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={COUNTRIES.map((category) => ({ label: category, value: category }))}
+                  options={COUNTRIES.map((country) => ({ label: country, value: country }))}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   variant='inverted'

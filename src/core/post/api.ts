@@ -12,4 +12,6 @@ export type GetResponsePost = Omit<Post, 'image'> & {
   image: string
 }
 
+export type GetParamsPosts = Partial<Pick<Post, 'category' | 'region' | 'country'>> & { search?: string }
+
 export type GetResponsePosts = GetResponsePost[]

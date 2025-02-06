@@ -52,3 +52,30 @@ export const setTokensOnNextResponse = (res: NextResponse, access: string, refre
     maxAge: 24 * 60 * 60
   })
 }
+
+export const formatURL = (url: string, parameters?: object): string => {
+  if (!parameters || Object.entries(parameters).length === 0) return url
+
+  let formattedUrl = url
+  const searchParams = new URLSearchParams()
+
+  Object.entries(parameters).forEach(([key, value]) => {
+    const placeholder = `{${key}}`
+
+    if (value === null || value === undefined) return
+
+    if (formattedUrl.includes(placeholder)) {
+      formattedUrl = formattedUrl.replace(placeholder, String(value))
+    } else {
+      searchParams.append(key, String(value))
+    }
+  })
+
+  const queryString = searchParams.toString()
+  if (queryString !== '') {
+    formattedUrl += formattedUrl.includes('?') ? '&' : '?'
+    formattedUrl += queryString
+  }
+
+  return formattedUrl
+}

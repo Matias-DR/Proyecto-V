@@ -9,9 +9,9 @@ export type Country = (typeof COUNTRIES)[number]
 export interface Post {
   _id: string
   name: string
-  category: Category
+  category: Category[]
   description: string
-  region: Region
-  country: Country
+  region: Region[]
+  country: Country[]
   image: string
 }

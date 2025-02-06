@@ -1,38 +1,53 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { CircleFadingPlus } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import View from '@/components/post/view'
 
 export default function Home() {
   return (
-    <div className='h-screen bg-main bg-cover bg-center bg-opacity-50'>
-      <section className='flex justify-between border border-red-400'>
-        <article className='flex gap-4'>
-          <div className='size-48'>
-            <Image
-              src='/heroes/07.png'
-              width={1024}
-              height={1024}
-              alt='welcome-image'
-              className=''
-            />
-          </div>
-          <div className='flex flex-col justify-center'>
-            <h1 className='text-2xl font-bold'>Títutlo de bienvenida</h1>
-            <p className=''>Definición/Descripción de un héroe y su camino</p>
-          </div>
-        </article>
-        <article>
-          <Button variant='ghost' size='icon' className='!size-48'>
-            <CircleFadingPlus className='!size-36 animate-spin' />
-          </Button>
-        </article>
-      </section>
-      <section>
-        <article></article>
-        <article></article>
-      </section>
+    <div className='relative h-screen p-2'>
+      <div className='fixed -z-10 inset-0 opacity-15'>
+        <Image
+          src='/heroes/08.webp'
+          alt='background-image'
+          fill
+          className='object-cover object-center'
+          quality={100}
+          priority
+        />
+      </div>
+      <div className='relative z-10 h-full flex flex-col gap-2'>
+        <section className='flex justify-between gap-2'>
+          <article className='flex-1 flex gap-4 bg-blue-300/10 rounded-lg'>
+            <div className='size-48 p-2'>
+              <Image
+                src='/heroes/07.png'
+                width={1024}
+                height={1024}
+                alt='welcome-image'
+                className='rounded-md'
+              />
+            </div>
+            <div className='flex flex-col justify-center'>
+              <h1 className='text-4xl font-bold'>Títutlo de bienvenida</h1>
+              <p className=''>Definición/Descripción de un héroe y su camino</p>
+            </div>
+          </article>
+          <article>
+            <Link
+              href='/post/create'
+              className='h-full flex justify-center items-center hover:cursor-pointer hover:bg-transparent hover:scale-110 transition origin-right'
+            >
+              <CircleFadingPlus className='size-36! animate-spin' />
+            </Link>
+          </article>
+        </section>
+        <section className='sticky top-0 flex gap-2'>
+          <View />
+        </section>
+      </div>
     </div>
   )
 }

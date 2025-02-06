@@ -35,7 +35,7 @@ export const usePostSignInController = () => {
 
   const mutation = useMutation({
     mutationFn: postSignInController,
-    onSuccess: () => push('/post/create'),
+    onSuccess: () => push('/'),
     onError(error) {
       if (error instanceof AxiosError) {
         if (error.status === 404) toast({ title: 'Error', description: 'Nombre y/o contraseña incorrecta.' })

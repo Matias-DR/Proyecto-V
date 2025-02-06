@@ -33,11 +33,11 @@ export const FileInput = ({ control, error }: Props) => {
             className='flex items-center gap-2 text-blue-400 font-bold hover:cursor-pointer'
           >
             Imagen
-            <ImageUpIcon className='!size-4' />
+            <ImageUpIcon className='size-4!' />
           </FormLabel>{' '}
           <div
             onClick={() => !file && openInput()}
-            className={cn('px-2 py-1 border border-blue-400 rounded-md shadow-sm', { 'hover:cursor-pointer': !file })}
+            className={cn('px-2 py-1 border border-blue-400 rounded-md shadow-xs', { 'hover:cursor-pointer': !file })}
           >
             <FormControl>
               <Input

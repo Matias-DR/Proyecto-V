@@ -1,11 +1,13 @@
 'use client'
 
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
-import { postPostController } from '@/controllers/post'
-import { useMutation } from '@tanstack/react-query'
+import { getPostsController, GetPostsControllerProps, postPostController } from '@/controllers/post'
 import { useToast } from './use-toast'
+
+export type UseGetPostsControllerProps = GetPostsControllerProps
 
 export const usePostPostController = () => {
   const { toast } = useToast()
@@ -23,4 +25,13 @@ export const usePostPostController = () => {
   })
 
   return mutation
+}
+
+export const useGetPostsController = ({ params }: UseGetPostsControllerProps) => {
+  const query = useQuery({
+    queryKey: ['posts', params],
+    queryFn: async () => await getPostsController({ params })
+  })
+
+  return query
 }

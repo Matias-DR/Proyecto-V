@@ -11,7 +11,7 @@ export const HeaderDropdownMenu = () => {
     <Sheet>
       <SheetTrigger asChild>
         <Button variant='ghost'>
-          <MenuIcon className='!size-6' />
+          <MenuIcon className='size-6!' />
         </Button>
       </SheetTrigger>
       <SheetContent className='bg-rose-700 bg-clip-padding backdrop-filter backdrop-blur-none bg-opacity-50'>
