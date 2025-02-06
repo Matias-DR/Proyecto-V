@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'proyecto-v-heroes'
+        hostname: 'proyecto-v-heroes.vercel.app'
       }
     ]
   }
