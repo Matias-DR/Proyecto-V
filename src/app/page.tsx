@@ -35,7 +35,7 @@ export default function Home() {
               <p className=''>Definición/Descripción de un héroe y su camino</p>
             </div>
           </article>
-          <article>
+          <article className='overflow-hidden'>
             <Link
               href='/post/create'
               className='h-full flex justify-center items-center hover:cursor-pointer hover:bg-transparent hover:scale-110 transition origin-right'
