@@ -12,6 +12,7 @@ const Post = ({ data }: Props) => {
 
   return (
     <div className='size-full px-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
+      <span className='hidden'>{category} {country} {region}</span>
       <h1 className='text-center text-2xl font-bold'>{name}</h1>
       <div className='relative w-full h-48'>
         <Image

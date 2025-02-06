@@ -14,7 +14,10 @@ const View = () => {
 
   return (
     <Fragment>
-      <Grid posts={data} isError={isError} />
+      <Grid
+        posts={data}
+        isError={isError}
+      />
       <Filter setParams={setParams} />
     </Fragment>
   )
