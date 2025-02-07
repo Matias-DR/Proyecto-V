@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UseMutationResult } from '@tanstack/react-query'
+import { LoaderCircleIcon } from 'lucide-react'
 import { useMemo } from 'react'
 import { FieldError, useForm } from 'react-hook-form'
 import { z, ZodRawShape } from 'zod'
@@ -22,23 +23,15 @@ export interface Props {
 }
 
 export function PostForm({ usePostController, schema }: Props) {
-  const { mutate } = usePostController()
+  const { mutate, isPending, isSuccess } = usePostController()
   const formSchema = useMemo(() => z.object(schema), [schema])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      category: [],
-      region: [],
-      country: []
-    }
+    defaultValues: { name: '', description: '', category: [], region: [], country: [] }
   })
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutate({ body: values as CommonBodyPost })
-  }
+  const onSubmit = (values: z.infer<typeof formSchema>) => mutate({ body: values as CommonBodyPost })
 
   return (
     <Form {...form}>
@@ -146,10 +139,11 @@ export function PostForm({ usePostController, schema }: Props) {
           error={form.formState.errors.file as FieldError | undefined}
         />
         <Button
+          disabled={isPending || isSuccess}
           type='submit'
-          className='text-white font-bold bg-blue-400 border-blue-400 hover:bg-blue-300 hover:text-blue-600'
+          className='text-white font-bold bg-blue-400 border-blue-400 hover:bg-blue-300 hover:text-blue-600 hover:cursor-pointer'
         >
-          ENVIAR
+          {isPending || isSuccess ? <LoaderCircleIcon className='animate-spin-fast transition' /> : 'ENVIAR'}
         </Button>
       </form>
     </Form>

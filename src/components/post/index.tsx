@@ -1,5 +1,6 @@
 import Image from 'next/image'
 
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Post as PostType } from '@/core/post'
 import { FRONTEND_URL } from '@/infra/config'
 
@@ -8,21 +9,23 @@ export interface Props {
 }
 
 const Post = ({ data }: Props) => {
-  const { category, country, description, image, name, region } = data
+  // const { description, image, name, category, country, region } = data
+  const { description, image, name } = data
 
   return (
-    <div className='size-full px-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
-      <span className='hidden'>{category} {country} {region}</span>
-      <h1 className='text-center text-2xl font-bold'>{name}</h1>
-      <div className='relative w-full h-48'>
+    <div className='size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
+      <div className='relative w-full h-48 overflow-hidden border border-blue-300 rounded-md'>
         <Image
           src={`${FRONTEND_URL}/api/post/image/${image}`}
           alt={name}
           fill
-          className='absolute object-cover rounded-md'
+          className='absolute object-contain'
         />
       </div>
-      <p className='text-wrap break-words'>{description}</p>
+      <h1 className='text-center text-2xl font-bold'>{name}</h1>
+      <ScrollArea vpClassName='p-0'>
+        <p className='max-h-32 text-wrap break-words'>{description}</p>
+      </ScrollArea>
     </div>
   )
 }

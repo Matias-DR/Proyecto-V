@@ -164,3 +164,7 @@
 .animate-spin {
   animation: spin 36s linear infinite;
 }
+
+.animate-spin-fast {
+  animation: spin 2s linear infinite;
+}

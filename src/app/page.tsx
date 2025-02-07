@@ -35,12 +35,12 @@ export default function Home() {
               <p className=''>Definición/Descripción de un héroe y su camino</p>
             </div>
           </article>
-          <article className='overflow-hidden'>
+          <article className='w-36 h-full flex justify-center items-center overflow-hidden'>
             <Link
               href='/post/create'
-              className='h-full flex justify-center items-center hover:cursor-pointer hover:bg-transparent hover:scale-110 transition origin-right'
+              className='hover:cursor-pointer hover:bg-transparent hover:scale-110 transition origin-center'
             >
-              <CircleFadingPlus className='size-36! animate-spin' />
+              <CircleFadingPlus className='size-32! animate-spin' />
             </Link>
           </article>
         </section>
