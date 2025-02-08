@@ -10,7 +10,10 @@ export const HeaderDropdownMenu = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant='ghost'>
+        <Button
+          variant='ghost'
+          className='hover:cursor-pointer'
+        >
           <MenuIcon className='size-6!' />
         </Button>
       </SheetTrigger>
