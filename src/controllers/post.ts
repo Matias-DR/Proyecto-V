@@ -1,6 +1,7 @@
 import api from '@/infra/axios'
 
-import { GetParamsPosts, GetResponsePosts, PostBodyPost } from '@/core/post/api'
+import { Category, Country, Post, Region } from '@/core/post'
+import { GetParamsPosts, GetResponsePost, GetResponsePosts, PostBodyPost } from '@/core/post/api'
 import { formatURL } from '@/lib/utils'
 
 export interface PostPostControllerProps {
@@ -14,7 +15,7 @@ export interface GetPostsControllerProps {
 export const postPostController = async ({ body }: PostPostControllerProps) => {
   const formData = new FormData()
   Object.entries(body).forEach(([key, value]) => {
-    if (Array.isArray(value)) value.forEach((item) => formData.append(`${key}[]`, item))
+    if (Array.isArray(value)) formData.append(key, JSON.stringify(value))
     else formData.append(key, value)
   })
   return await api.post('/api/post/create', formData).then((res) => res.data)
@@ -22,5 +23,16 @@ export const postPostController = async ({ body }: PostPostControllerProps) => {
 
 export const getPostsController = async ({ params }: GetPostsControllerProps): Promise<GetResponsePosts> => {
   const url = formatURL('/api/post/get', params)
-  return await api.get(url).then((res) => res.data)
+  const res = await api
+    .get<Array<Omit<Post, 'category' | 'region' | 'country'> & { category: string; region: string; country: string }>>(url)
+    .then((res) => res.data)
+  const adaptedPosts: GetResponsePosts = res.map(
+    (post): GetResponsePost => ({
+      ...post,
+      category: (post.category ? (post.category.includes('[') ? JSON.parse(post.category) : [post.category]) : []) as Category[],
+      region: (post.region ? (post.region.includes('[') ? JSON.parse(post.region) : [post.region]) : []) as Region[],
+      country: (post.country ? (post.country.includes('[') ? JSON.parse(post.country) : [post.country]) : []) as Country[]
+    })
+  )
+  return adaptedPosts
 }
