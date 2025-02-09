@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Post as PostType } from '@/core/post'
 import { FRONTEND_URL } from '@/infra/config'
 
@@ -11,8 +11,7 @@ export interface Props {
 }
 
 const Post = ({ data }: Props) => {
-  const { description, image, name, category, country, region } = data
-  // const { description, image, name } = data
+  const { _id, description, image, name, category, country, region } = data
 
   return (
     <div className='size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
@@ -27,16 +26,76 @@ const Post = ({ data }: Props) => {
             />
           </div>
         </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className='max-w-[97.5%] flex flex-row bg-transparent border-blue-300'>
+          <div className='relative !size-[28vw] overflow-hidden border border-blue-300 rounded-md'>
+            <Image
+              src={`${FRONTEND_URL}/api/post/image/${image}`}
+              alt={name}
+              fill
+              className='absolute object-contain'
+            />
+          </div>
+          <div className='flex-1 flex flex-col gap-3'>
+            <DialogHeader>
+              <DialogTitle className='text-4xl line-clamp-1'>{name}</DialogTitle>
+              <ScrollArea
+                vpClassName='p-0'
+                className='flex-1'
+              >
+                <DialogDescription className='max-h-[40vh] text-base text-white'>{description}</DialogDescription>
+              </ScrollArea>
+            </DialogHeader>
+            <div className='flex flex-col gap-2'>
+              <ScrollArea
+                vpClassName='p-0'
+                className='flex-1 pb-3'
+              >
+                <div className='max-w-[64vw] flex gap-1'>
+                  <span>Categorías:</span>
+                  {category &&
+                    category.map((category) => (
+                      <Badge key={`${category}-${_id}`}>
+                        <span className='truncate'>{category}</span>
+                      </Badge>
+                    ))}
+                </div>
+                <ScrollBar orientation='horizontal' />
+              </ScrollArea>
+              <ScrollArea
+                vpClassName='p-0'
+                className='flex-1 pb-3'
+              >
+                <div className='max-w-[64vw] flex gap-1'>
+                  <span>Continentes:</span>
+                  {region &&
+                    region.map((region) => (
+                      <Badge key={`${region}-${_id}`}>
+                        <span className='truncate'>{region}</span>
+                      </Badge>
+                    ))}
+                </div>
+                <ScrollBar orientation='horizontal' />
+              </ScrollArea>
+
+              <ScrollArea
+                vpClassName='p-0'
+                className='flex-1 pb-3'
+              >
+                <div className='max-w-[64vw] flex gap-1'>
+                  <span>Países:</span>
+                  {country &&
+                    country.map((country) => (
+                      <Badge key={`${country}-${_id}`}>
+                        <span className='truncate'>{country}</span>
+                      </Badge>
+                    ))}
+                </div>
+                <ScrollBar orientation='horizontal' />
+              </ScrollArea>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
-
       <h1 className='text-center text-2xl font-bold line-clamp-1'>{name}</h1>
       <ScrollArea
         vpClassName='p-0'
@@ -50,7 +109,7 @@ const Post = ({ data }: Props) => {
             <span className='truncate'>{category}</span>
             {category.length > 1 && (
               <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-blue-500 text-white text-[10px]'>
-                +{category.length}9
+                +{category.length - 1}
               </span>
             )}
           </Badge>
@@ -60,7 +119,7 @@ const Post = ({ data }: Props) => {
             <span className='truncate'>{region}</span>
             {region.length > 1 && (
               <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-blue-500 text-white text-[10px]'>
-                +{region.length}
+                +{region.length - 1}
               </span>
             )}
           </Badge>
@@ -70,7 +129,7 @@ const Post = ({ data }: Props) => {
             <span className='truncate'>{country}</span>
             {country.length > 1 && (
               <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-blue-500 text-white text-[10px]'>
-                +{country.length}
+                +{country.length - 1}
               </span>
             )}
           </Badge>
