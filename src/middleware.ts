@@ -6,8 +6,6 @@ import { FRONTEND_URL } from './infra/config'
 export function middleware(req: NextRequest) {
   const access = req.cookies.get('access')?.value
 
-  console.log(req.nextUrl.pathname)
-
   const isAuth = req.nextUrl.pathname.startsWith('/auth')
   if (isAuth && access) return NextResponse.redirect(FRONTEND_URL!)
   if (!isAuth && !access) return NextResponse.redirect(`${FRONTEND_URL!}/auth/sign/in`)

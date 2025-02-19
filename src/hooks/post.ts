@@ -1,10 +1,11 @@
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
-import { getPostsController, GetPostsControllerProps, postPostController } from '@/controllers/post'
+import { usePostsContext } from '@/contexts/posts'
+import { deletePostController, getPostsController, GetPostsControllerProps, postPostController } from '@/controllers/post'
 import { useToast } from './use-toast'
 
 export type UseGetPostsControllerProps = GetPostsControllerProps
@@ -34,4 +35,22 @@ export const useGetPostsController = ({ params }: UseGetPostsControllerProps) =>
   })
 
   return query
+}
+
+export const useDeletePostController = () => {
+  const { params } = usePostsContext()
+  const { toast } = useToast()
+
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: deletePostController,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts', params] })
+      toast({ title: 'Éxito', description: 'La publicación fue eliminada.' })
+    },
+    onError: () => toast({ title: 'Error', description: 'No se pudo eliminar la publicación. Por favor intente mas tarde.' })
+  })
+
+  return mutation
 }

@@ -10,3 +10,11 @@ export default async function db() {
   const connection = await client.connect()
   return connection.db(DB_NAME)
 }
+
+export async function dbClient() {
+  const connection = await client.connect()
+  return {
+    client: connection,
+    connection: connection.db(DB_NAME)
+  }
+}

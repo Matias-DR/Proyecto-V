@@ -1,7 +1,7 @@
 import api from '@/infra/axios'
 
 import { Category, Country, Post, Region } from '@/core/post'
-import { GetParamsPosts, GetResponsePost, GetResponsePosts, PostBodyPost } from '@/core/post/api'
+import { DeleteParamsPost, DeleteResponsePost, GetParamsPosts, GetResponsePost, GetResponsePosts, PostBodyPost } from '@/core/post/api'
 import { formatURL } from '@/lib/utils'
 
 export interface PostPostControllerProps {
@@ -10,6 +10,10 @@ export interface PostPostControllerProps {
 
 export interface GetPostsControllerProps {
   params: GetParamsPosts
+}
+
+export interface DeletePostControllerProps {
+  params: DeleteParamsPost
 }
 
 export const postPostController = async ({ body }: PostPostControllerProps) => {
@@ -35,4 +39,9 @@ export const getPostsController = async ({ params }: GetPostsControllerProps): P
     })
   )
   return adaptedPosts
+}
+
+export const deletePostController = async ({ params }: DeletePostControllerProps) => {
+  const url = formatURL('/api/post/delete', params)
+  return await api.delete<DeleteResponsePost>(url).then((res) => res.data)
 }

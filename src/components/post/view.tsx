@@ -1,15 +1,15 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 
 import Filter from '@/components/post/filter'
 import Grid from '@/components/post/grid'
 
-import { GetParamsPosts } from '@/core/post/api'
+import { PostsProvider, usePostsContext } from '@/contexts/posts'
 import { useGetPostsController } from '@/hooks/post'
 
 const View = () => {
-  const [params, setParams] = useState<GetParamsPosts>({})
+  const { params, setParams } = usePostsContext()
   const { data, isError } = useGetPostsController({ params })
 
   return (
@@ -23,4 +23,10 @@ const View = () => {
   )
 }
 
-export default View
+const WithContext = () => (
+  <PostsProvider>
+    <View />
+  </PostsProvider>
+)
+
+export default WithContext

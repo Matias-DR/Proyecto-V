@@ -1,10 +1,26 @@
 import Image from 'next/image'
 
+import { MessageCircleIcon, ThumbsUpIcon, TrashIcon } from 'lucide-react'
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Post as PostType } from '@/core/post'
+import { useDeletePostController } from '@/hooks/post'
 import { FRONTEND_URL } from '@/infra/config'
+import { useRef } from 'react'
 
 export interface Props {
   data: PostType
@@ -13,9 +29,23 @@ export interface Props {
 const Post = ({ data }: Props) => {
   const { _id, description, image, name, category, country, region } = data
 
+  const closeRef = useRef<HTMLButtonElement>(null)
+
+  const { mutate, isPending } = useDeletePostController()
+
   return (
     <div className='size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
       <Dialog>
+        <DialogClose
+          asChild
+          className='hidden'
+        >
+          <Button
+            type='button'
+            ref={closeRef}
+            className='hidden'
+          />
+        </DialogClose>
         <DialogTrigger>
           <div className='relative w-full h-48 overflow-hidden border border-blue-300 rounded-md hover:cursor-pointer'>
             <Image
@@ -27,13 +57,59 @@ const Post = ({ data }: Props) => {
           </div>
         </DialogTrigger>
         <DialogContent className='max-w-[97.5%] flex flex-row bg-transparent border-blue-300'>
-          <div className='relative !size-[28vw] overflow-hidden border border-blue-300 rounded-md'>
-            <Image
-              src={`${FRONTEND_URL}/api/post/image/${image}`}
-              alt={name}
-              fill
-              className='absolute object-contain'
-            />
+          <div className='flex flex-col gap-2'>
+            <div className='relative !size-[28vw] overflow-hidden border border-blue-300 rounded-md'>
+              <Image
+                src={`${FRONTEND_URL}/api/post/image/${image}`}
+                alt={name}
+                fill
+                className='absolute object-contain'
+              />
+            </div>
+            <div className='flex gap-2'>
+              <Button
+                size='icon'
+                onClick={() => {}}
+                className='bg-blue-500 text-white hover:bg-blue-600'
+              >
+                <ThumbsUpIcon className='!size-6' />
+              </Button>
+              <Button
+                size='icon'
+                onClick={() => {}}
+                className='bg-blue-500 text-white hover:bg-blue-600'
+              >
+                <MessageCircleIcon className='!size-6' />
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    size='icon'
+                    onClick={() => {}}
+                    className='bg-red-400 text-white hover:bg-red-500'
+                  >
+                    <TrashIcon className='!size-6' />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
+                    <AlertDialogDescription className='line-clamp-1'>
+                      Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={isPending}
+                      onClick={() => mutate({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+                    >
+                      Continuar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </div>
           <div className='flex-1 flex flex-col gap-3'>
             <DialogHeader>
