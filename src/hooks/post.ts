@@ -5,7 +5,13 @@ import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
 import { usePostsContext } from '@/contexts/posts'
-import { deletePostController, getPostsController, GetPostsControllerProps, postPostController } from '@/controllers/post'
+import {
+  deletePostController,
+  getPostsController,
+  GetPostsControllerProps,
+  likePostController,
+  postPostController
+} from '@/controllers/post'
 import { useToast } from './use-toast'
 
 export type UseGetPostsControllerProps = GetPostsControllerProps
@@ -50,6 +56,19 @@ export const useDeletePostController = () => {
       toast({ title: 'Éxito', description: 'La publicación fue eliminada.' })
     },
     onError: () => toast({ title: 'Error', description: 'No se pudo eliminar la publicación. Por favor intente mas tarde.' })
+  })
+
+  return mutation
+}
+
+export const useLikeController = () => {
+  const { params } = usePostsContext()
+
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: likePostController,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts', params] })
   })
 
   return mutation

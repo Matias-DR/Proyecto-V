@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+// import { Comic_Neue } from 'next/font/google'
 
 import { QueryProvider } from '@/components/query-provider'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -7,15 +7,12 @@ import { Toaster } from '@/components/ui/toaster'
 
 import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin']
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin']
-})
+// const comicNeue = Comic_Neue({
+//   variable: '--font-comic-neue',
+//   subsets: ['latin'],
+//   weight: ['300', '400', '700'],
+//   display: "swap"
+// })
 
 export const metadata: Metadata = {
   title: 'Héroes',
@@ -27,7 +24,8 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     lang='en'
     suppressHydrationWarning
   >
-    <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    {/* <body className={`${comicNeue.variable} antialiased`}> */}
+    <body className='antialiased'>
       <ThemeProvider
         attribute='class'
         defaultTheme='dark'

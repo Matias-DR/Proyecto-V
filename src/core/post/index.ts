@@ -1,3 +1,4 @@
+import { User } from '@/core/user'
 import { CATEGORIES, CONTINENTS, COUNTRIES } from '@/lib/constants'
 
 export type Category = (typeof CATEGORIES)[number]
@@ -14,4 +15,5 @@ export interface Post {
   region: Region[]
   country: Country[]
   image: string
+  likes: User['name'][]
 }

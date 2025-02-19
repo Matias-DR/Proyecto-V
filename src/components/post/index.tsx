@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 
-import { MessageCircleIcon, ThumbsUpIcon, TrashIcon } from 'lucide-react'
+import { MessageCircleIcon, ThumbsDownIcon, ThumbsUpIcon, TrashIcon } from 'lucide-react'
+import { useMemo, useRef } from 'react'
 
 import {
   AlertDialog,
@@ -17,10 +20,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { usePostsContext } from '@/contexts/posts'
 import { Post as PostType } from '@/core/post'
-import { useDeletePostController } from '@/hooks/post'
+import { useDeletePostController, useLikeController } from '@/hooks/post'
 import { FRONTEND_URL } from '@/infra/config'
-import { useRef } from 'react'
 
 export interface Props {
   data: PostType
@@ -28,10 +31,16 @@ export interface Props {
 
 const Post = ({ data }: Props) => {
   const { _id, description, image, name, category, country, region } = data
+  const { name: username } = usePostsContext()
+
+  const likes = useMemo(() => data.likes ?? [], [data])
 
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  const { mutate, isPending } = useDeletePostController()
+  const { mutate: mutateDelete, isPending: isPendingDelete } = useDeletePostController()
+  const { mutate: mutateLike, isPending: isPendingLike } = useLikeController()
+
+  const LikeIcon = useMemo(() => (likes.includes(username) ? ThumbsDownIcon : ThumbsUpIcon), [likes, username])
 
   return (
     <div className='size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
@@ -52,6 +61,7 @@ const Post = ({ data }: Props) => {
               src={`${FRONTEND_URL}/api/post/image/${image}`}
               alt={name}
               fill
+              sizes='100%'
               className='absolute object-contain'
             />
           </div>
@@ -63,16 +73,21 @@ const Post = ({ data }: Props) => {
                 src={`${FRONTEND_URL}/api/post/image/${image}`}
                 alt={name}
                 fill
+                sizes='100%'
                 className='absolute object-contain'
               />
             </div>
             <div className='flex gap-2'>
               <Button
                 size='icon'
-                onClick={() => {}}
-                className='bg-blue-500 text-white hover:bg-blue-600'
+                disabled={isPendingLike}
+                onClick={() => mutateLike({ params: { _id } })}
+                className='relative bg-blue-500 text-white hover:bg-blue-600 !fill-white'
               >
-                <ThumbsUpIcon className='!size-6' />
+                <LikeIcon className='!size-6' />
+                <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-white text-blue-500 text-[10px]'>
+                  +{likes.length > 9 ? 9 : likes.length}
+                </span>
               </Button>
               <Button
                 size='icon'
@@ -101,8 +116,8 @@ const Post = ({ data }: Props) => {
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
                     <AlertDialogAction
-                      disabled={isPending}
-                      onClick={() => mutate({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+                      disabled={isPendingDelete}
+                      onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
                     >
                       Continuar
                     </AlertDialogAction>

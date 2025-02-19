@@ -1,19 +1,24 @@
 'use client'
 
+import { createContext, useContext, useState, type ReactNode } from 'react'
+
 import { GetParamsPosts } from '@/core/post/api'
-import { createContext, useState, useContext, type ReactNode } from 'react'
+import { User } from '@/core/users'
+import { useGetNameController } from '@/hooks/user'
 
 interface PostsContextType {
   params: GetParamsPosts
   setParams: React.Dispatch<React.SetStateAction<GetParamsPosts>>
+  name: User['name']
 }
 
 const PostsContext = createContext<PostsContextType | undefined>(undefined)
 
 export const PostsProvider = ({ children }: { children: ReactNode }) => {
   const [params, setParams] = useState<GetParamsPosts>({})
+  const { data: name } = useGetNameController()
 
-  return <PostsContext.Provider value={{ params, setParams }}>{children}</PostsContext.Provider>
+  return <PostsContext.Provider value={{ params, setParams, name: name ?? '' }}>{children}</PostsContext.Provider>
 }
 
 export const usePostsContext = () => {

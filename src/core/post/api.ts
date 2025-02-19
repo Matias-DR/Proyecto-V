@@ -19,3 +19,7 @@ export type GetResponsePosts = GetResponsePost[]
 export type DeleteParamsPost = Pick<Post, '_id'>
 
 export type DeleteResponsePost = boolean
+
+export type LikeParamsPost = Pick<Post, '_id'>
+
+export type LikeResponsePost = boolean

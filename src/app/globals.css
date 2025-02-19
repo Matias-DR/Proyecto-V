@@ -168,3 +168,7 @@
 .animate-spin-fast {
   animation: spin 2s linear infinite;
 }
+
+/* html {
+  --font-sans: var(--font-comic-neue), Arial, sans-serif;
+} */
