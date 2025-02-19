@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
 
 import { GetParamsPosts } from '@/core/post/api'
-import { User } from '@/core/users'
+import { User } from '@/core/user'
 import { useGetNameController } from '@/hooks/user'
 
 interface PostsContextType {
