@@ -1,3 +1,3 @@
 import { User } from '.'
 
-export type GetResponseName = User['name']
+export type GetResponseUser = User

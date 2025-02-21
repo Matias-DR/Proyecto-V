@@ -30,8 +30,8 @@ export interface Props {
 }
 
 const Post = ({ data }: Props) => {
-  const { _id, description, image, name, category, country, region } = data
-  const { name: username } = usePostsContext()
+  const { _id, description, image, name, category, country, region, user: username } = data
+  const { user } = usePostsContext()
 
   const likes = useMemo(() => data.likes ?? [], [data])
 
@@ -40,7 +40,7 @@ const Post = ({ data }: Props) => {
   const { mutate: mutateDelete, isPending: isPendingDelete } = useDeletePostController()
   const { mutate: mutateLike, isPending: isPendingLike } = useLikeController()
 
-  const LikeIcon = useMemo(() => (likes.includes(username) ? ThumbsDownIcon : ThumbsUpIcon), [likes, username])
+  const LikeIcon = useMemo(() => (likes.includes(user.name) ? ThumbsDownIcon : ThumbsUpIcon), [likes, user.name])
 
   return (
     <div className='size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
@@ -96,34 +96,36 @@ const Post = ({ data }: Props) => {
               >
                 <MessageCircleIcon className='!size-6' />
               </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    size='icon'
-                    onClick={() => {}}
-                    className='bg-red-400 text-white hover:bg-red-500'
-                  >
-                    <TrashIcon className='!size-6' />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
-                    <AlertDialogDescription className='line-clamp-1'>
-                      Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                      disabled={isPendingDelete}
-                      onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+              {(username ?? '') === user.name && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      size='icon'
+                      onClick={() => {}}
+                      className='bg-red-400 text-white hover:bg-red-500'
                     >
-                      Continuar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                      <TrashIcon className='!size-6' />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
+                      <AlertDialogDescription className='line-clamp-1'>
+                        Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        disabled={isPendingDelete}
+                        onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+                      >
+                        Continuar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           </div>
           <div className='flex-1 flex flex-col gap-3'>

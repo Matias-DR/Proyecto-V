@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { getNameController } from '@/controllers/users'
+import { getUserController } from '@/controllers/users'
 
-export const useGetNameController = () => {
+export const useGetUserController = () => {
   const query = useQuery({
-    queryKey: ['name'],
-    queryFn: getNameController
+    queryKey: ['user'],
+    queryFn: getUserController,
+    refetchOnMount: 'always'
   })
 
   return query

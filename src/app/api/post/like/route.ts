@@ -4,11 +4,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/infra/mongodb'
 
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
-import { getNameFromNextRequest } from '@/lib/utils'
+import { getUserNameFromNextRequest } from '@/lib/utils'
 
 export async function PATCH(req: NextRequest) {
   const _id = req.nextUrl.searchParams.get('_id') as string
-  const name = getNameFromNextRequest(req) as string
+  const name = getUserNameFromNextRequest(req) as string
 
   try {
     const connection = await db()

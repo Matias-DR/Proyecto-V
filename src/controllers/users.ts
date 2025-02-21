@@ -1,8 +1,7 @@
 import api from '@/infra/axios'
 
-import { GetResponseName } from '@/core/user/api'
+import { GetResponseUser } from '@/core/user/api'
 
-export const getNameController = async (): Promise<GetResponseName> => {
-  const res = await api.get('/api/user/name').then((res) => res.data)
-  return res
+export const getUserController = async (): Promise<GetResponseUser> => {
+  return await api.get('/api/user/get').then((res) => res.data)
 }
