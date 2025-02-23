@@ -3,7 +3,7 @@
 import Image from 'next/image'
 
 import { MessageCircleIcon, ThumbsDownIcon, ThumbsUpIcon, TrashIcon } from 'lucide-react'
-import { useMemo, useRef } from 'react'
+import { HTMLAttributes, useMemo, useRef } from 'react'
 
 import {
   AlertDialog,
@@ -24,12 +24,13 @@ import { usePostsContext } from '@/contexts/posts'
 import { Post as PostType } from '@/core/post'
 import { useDeletePostController, useLikeController } from '@/hooks/post'
 import { FRONTEND_URL } from '@/infra/config'
+import { cn } from '@/lib/utils'
 
-export interface Props {
+export interface Props extends HTMLAttributes<HTMLDivElement> {
   data: PostType
 }
 
-const Post = ({ data }: Props) => {
+const Post = ({ data, className }: Props) => {
   const { _id, description, image, name, category, country, region, user: username } = data
   const { user } = usePostsContext()
 
@@ -43,7 +44,7 @@ const Post = ({ data }: Props) => {
   const LikeIcon = useMemo(() => (likes.includes(user.name) ? ThumbsDownIcon : ThumbsUpIcon), [likes, user.name])
 
   return (
-    <div className='size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg'>
+    <div className={cn('size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg', className)}>
       <Dialog>
         <DialogClose
           asChild

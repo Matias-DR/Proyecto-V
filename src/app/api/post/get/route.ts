@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/infra/mongodb'
 
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
+import { getUserFromNextRequest } from '@/lib/utils'
+
+// AGREGAR EL CASO "myPosts"
 
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams
@@ -16,6 +19,11 @@ export async function GET(req: NextRequest) {
   const search = query.get('search')
   if (search) {
     conditions.push({ $or: [{ name: { $regex: search, $options: 'i' } }, { description: { $regex: search, $options: 'i' } }] })
+  }
+  const myPosts = query.get('myPosts')
+  if (myPosts) {
+    const { name } = getUserFromNextRequest(req, process.env.ACCESS_TOKEN_SECRET!)
+    conditions.push({ user: { $eq: name } })
   }
   // @example
   // {
@@ -34,7 +42,7 @@ export async function GET(req: NextRequest) {
   try {
     const connection = await db()
     const collection = connection.collection(COLLECTION_NAMES.posts)
-    const res = collection.find()
+    const res = collection.find().sort({ _id: -1 })
     // si hay al menos un parámetro fitra
     if (Object.values(filter).some((value) => value !== undefined)) {
       try {
@@ -42,6 +50,7 @@ export async function GET(req: NextRequest) {
           .find({
             $or: Object.entries(filter).map(([key, value]) => ({ [key]: value }))
           })
+          .sort({ _id: -1 })
           .toArray()
         return NextResponse.json(data, { status: 200 })
       } catch {

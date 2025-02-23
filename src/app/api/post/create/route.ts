@@ -26,9 +26,9 @@ export async function POST(req: NextRequest) {
     const body: Record<string, unknown> = { image: bucketRes.insertedId.toString(), user: username }
     for (const [key, value] of formData) if (key !== 'image') body[key] = value
 
-    await postsCollection.insertOne({ ...body })
+    const res = await postsCollection.insertOne({ ...body })
 
-    return NextResponse.json({}, { status: 201 })
+    return NextResponse.json({ _id: res.insertedId }, { status: 201 })
   } catch (err) {
     console.error('Error establishing server connection', err)
     if (err instanceof MongoServerError) return NextResponse.json({}, { status: err.code === 11000 ? 409 : 500 })

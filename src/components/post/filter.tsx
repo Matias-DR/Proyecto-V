@@ -2,20 +2,22 @@
 
 import { Dispatch, SetStateAction } from 'react'
 
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { GetParamsPosts } from '@/core/post/api'
 import { CATEGORIES, CONTINENTS, COUNTRIES } from '@/lib/constants'
 
 export interface Props {
+  params: GetParamsPosts
   setParams: Dispatch<SetStateAction<GetParamsPosts>>
 }
 
-const Filter = ({ setParams }: Props) => {
-  const setParam = (field: keyof GetParamsPosts) => (value?: string | string[]) => {
+const Filter = ({ params, setParams }: Props) => {
+  const setParam = (field: keyof GetParamsPosts) => (value?: string | string[] | boolean) => {
     setParams((prevParams) => {
       const updatedParams = { ...prevParams, [field]: value }
-      if (value === undefined || value === '' || value.length === 0) delete updatedParams[field]
+      if (value === undefined || value === '' || !value || (Array.isArray(value) && value.length === 0)) delete updatedParams[field]
       return updatedParams
     })
   }
@@ -50,7 +52,6 @@ const Filter = ({ setParams }: Props) => {
           placeholder='Región'
           className='bg-white/15 text-white font-bold border-blue-400'
         />
-
         <MultiSelect
           options={COUNTRIES.map((country) => ({ label: country, value: country }))}
           onValueChange={(value) => setParam('country')(value)}
@@ -60,6 +61,13 @@ const Filter = ({ setParams }: Props) => {
           placeholder='País'
           className='bg-white/15 text-white font-bold border-blue-400'
         />
+        <div className='flex items-center gap-2'>
+          <Checkbox
+            checked={params.myPosts ? params.myPosts : false}
+            onCheckedChange={setParam('myPosts')}
+          />
+          <p className='font-bold'>Mis Publicaciones</p>
+        </div>
       </div>
     </article>
   )

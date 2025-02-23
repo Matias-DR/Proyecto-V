@@ -9,7 +9,8 @@ import {
   GetResponsePosts,
   LikeParamsPost,
   LikeResponsePost,
-  PostBodyPost
+  PostBodyPost,
+  PostResponsePost
 } from '@/core/post/api'
 import { formatURL } from '@/lib/utils'
 
@@ -29,7 +30,7 @@ export interface LikePostControllerProps {
   params: LikeParamsPost
 }
 
-export const postPostController = async ({ body }: PostPostControllerProps) => {
+export const postPostController = async ({ body }: PostPostControllerProps): Promise<PostResponsePost> => {
   const formData = new FormData()
   Object.entries(body).forEach(([key, value]) => {
     if (Array.isArray(value)) formData.append(key, JSON.stringify(value))

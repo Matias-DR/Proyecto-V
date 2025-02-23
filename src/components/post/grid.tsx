@@ -1,14 +1,15 @@
 import Post from '.'
 
-import { Post as PostType } from '@/core/post'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Post as PostType } from '@/core/post'
 
 export interface Props {
   posts?: PostType[]
   isError: boolean
+  postId?: PostType['_id']
 }
 
-const Grid = ({ posts }: Props) => {
+const Grid = ({ posts, postId }: Props) => {
   return (
     <ScrollArea
       vpClassName='px-0'
@@ -20,7 +21,10 @@ const Grid = ({ posts }: Props) => {
             key={post._id}
             className='flex-1 basis-64 max-w-64 h-96'
           >
-            <Post data={post} />
+            <Post
+              data={post}
+              className={postId && postId === post._id ? 'flip-vertical-fwd slide-in-elliptic-top-fwd' : ''}
+            />
           </div>
         ))}
       </article>

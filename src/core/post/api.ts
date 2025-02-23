@@ -6,13 +6,18 @@ export type PostBodyPost = Omit<Post, '_id' | 'image'> & {
   image: File
 }
 
+export type PostResponsePost = Pick<Post, '_id'>
+
 export type PatchBodyPost = PostBodyPost
 
 export type GetResponsePost = Omit<Post, 'image'> & {
   image: string
 }
 
-export type GetParamsPosts = Partial<Pick<Post, 'category' | 'region' | 'country'>> & { search?: string }
+export interface GetParamsPosts extends Partial<Pick<Post, 'category' | 'region' | 'country'>> {
+  myPosts?: boolean
+  search?: string
+}
 
 export type GetResponsePosts = GetResponsePost[]
 

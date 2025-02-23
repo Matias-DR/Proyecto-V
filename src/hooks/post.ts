@@ -22,7 +22,7 @@ export const usePostPostController = () => {
 
   const mutation = useMutation({
     mutationFn: postPostController,
-    onSuccess: () => push('/?search=my-posts'),
+    onSuccess: (data) => push(`/?my-posts=${data._id}`),
     onError(error) {
       if (error instanceof AxiosError) {
         if (error.status === 409) toast({ title: 'Error', description: 'Ya realizó una publicación del héroe con el nombre ingresado.' })
