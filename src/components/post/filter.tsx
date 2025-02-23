@@ -24,7 +24,7 @@ const Filter = ({ params, setParams }: Props) => {
 
   return (
     <article className='relative bg-blue-300/10 rounded-lg'>
-      <div className='sticky top-0 flex flex-col gap-2 p-2 '>
+      <div className='sticky top-0 flex flex-col gap-2 p-2'>
         <h2 className='text-lg font-bold text-center'>Filtros</h2>
         <Input
           placeholder='Nombre/Descripción'

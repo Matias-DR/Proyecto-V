@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { Fragment, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import Filter from '@/components/post/filter'
 import Grid from '@/components/post/grid'
@@ -22,17 +22,17 @@ const View = () => {
   }, [])
 
   return (
-    <Fragment>
+    <div className='w-screen flex flex-col min-[454px]:flex-row-reverse gap-2'>
+      <Filter
+        params={params}
+        setParams={setParams}
+      />
       <Grid
         posts={data}
         isError={isError}
         postId={myPosts ? myPosts : undefined}
       />
-      <Filter
-        params={params}
-        setParams={setParams}
-      />
-    </Fragment>
+    </div>
   )
 }
 

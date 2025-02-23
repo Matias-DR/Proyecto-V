@@ -2,7 +2,7 @@ import bcryptjs from 'bcryptjs'
 
 import { faker } from '@faker-js/faker'
 import { clsx, type ClassValue } from 'clsx'
-import { decode, JwtPayload, sign, verify } from 'jsonwebtoken'
+import { JwtPayload, sign, verify } from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
 import { twMerge } from 'tailwind-merge'
 
@@ -32,12 +32,6 @@ export const generateRandomNickname = () => {
   const suffix = Math.random().toString(36).substring(2, 6)
   const name = (word + suffix).substring(0, 6)
   return name
-}
-
-export const getUserNameFromNextRequest = (req: NextRequest): string => {
-  const access = req.cookies.get('access')!.value
-  const { user } = decode(access) as JwtPayload & { user: User }
-  return user.name
 }
 
 export const setTokensOnNextResponse = (res: NextResponse, access: string, refresh: string): void => {

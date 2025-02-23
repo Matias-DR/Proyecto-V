@@ -4,11 +4,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/infra/mongodb'
 
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
-import { getUserNameFromNextRequest } from '@/lib/utils'
+import { getUserFromNextRequest } from '@/lib/utils'
 
 export async function PATCH(req: NextRequest) {
   const _id = req.nextUrl.searchParams.get('_id') as string
-  const name = getUserNameFromNextRequest(req) as string
+  const { nickname } = getUserFromNextRequest(req, process.env.ACCESS_TOKEN_SECRET!)
 
   try {
     const connection = await db()
@@ -18,12 +18,12 @@ export async function PATCH(req: NextRequest) {
     await postsCollection.updateOne({ _id: new ObjectId(_id), likes: { $exists: false } }, { $set: { likes: [] } })
 
     // Intentar agregar el like
-    const res = await postsCollection.updateOne({ _id: new ObjectId(_id), likes: { $ne: name } }, { $addToSet: { likes: name } })
+    const res = await postsCollection.updateOne({ _id: new ObjectId(_id), likes: { $ne: nickname } }, { $addToSet: { likes: nickname } })
 
     let like = true
     if (res.modifiedCount === 0) {
       // Si no se modificó, significa que el usuario ya había dado like, así que se elimina
-      await postsCollection.updateOne({ _id: new ObjectId(_id) }, { $pull: { likes: name } as Filter<Document> })
+      await postsCollection.updateOne({ _id: new ObjectId(_id) }, { $pull: { likes: nickname } as Filter<Document> })
       like = false
     }
 

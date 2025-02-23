@@ -31,7 +31,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Post = ({ data, className }: Props) => {
-  const { _id, description, image, name, category, country, region, user: username } = data
+  const { _id, description, image, name, category, country, region, nickname } = data
   const { user } = usePostsContext()
 
   const likes = useMemo(() => data.likes ?? [], [data])
@@ -41,7 +41,7 @@ const Post = ({ data, className }: Props) => {
   const { mutate: mutateDelete, isPending: isPendingDelete } = useDeletePostController()
   const { mutate: mutateLike, isPending: isPendingLike } = useLikeController()
 
-  const LikeIcon = useMemo(() => (likes.includes(user.name) ? ThumbsDownIcon : ThumbsUpIcon), [likes, user.name])
+  const LikeIcon = useMemo(() => (likes.includes(user.nickname) ? ThumbsDownIcon : ThumbsUpIcon), [likes, user.nickname])
 
   return (
     <div className={cn('size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg', className)}>
@@ -65,6 +65,11 @@ const Post = ({ data, className }: Props) => {
               sizes='100%'
               className='absolute object-contain'
             />
+            <div className='relative size-full'>
+              <p className='absolute right-0 bottom-0 px-1 text-xs bg-[rgba(_255,_255,_255,_0_)] [box-shadow:0_8px_32px_0_rgba(_31,_38,_135,_0.37_)] backdrop-filter backdrop-blur-[20px] rounded-tl-xs rounded-br-sm'>
+                <span className='text-muted-foreground'>{nickname}</span>
+              </p>
+            </div>
           </div>
         </DialogTrigger>
         <DialogContent className='max-w-[97.5%] flex flex-row bg-transparent border-blue-300'>
@@ -78,55 +83,60 @@ const Post = ({ data, className }: Props) => {
                 className='absolute object-contain'
               />
             </div>
-            <div className='flex gap-2'>
-              <Button
-                size='icon'
-                disabled={isPendingLike}
-                onClick={() => mutateLike({ params: { _id } })}
-                className='relative bg-blue-500 text-white hover:bg-blue-600 !fill-white'
-              >
-                <LikeIcon className='!size-6' />
-                <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-white text-blue-500 text-[10px]'>
-                  +{likes.length > 9 ? 9 : likes.length}
-                </span>
-              </Button>
-              <Button
-                size='icon'
-                onClick={() => {}}
-                className='bg-blue-500 text-white hover:bg-blue-600'
-              >
-                <MessageCircleIcon className='!size-6' />
-              </Button>
-              {(username ?? '') === user.name && (
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      size='icon'
-                      onClick={() => {}}
-                      className='bg-red-400 text-white hover:bg-red-500'
-                    >
-                      <TrashIcon className='!size-6' />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
-                      <AlertDialogDescription className='line-clamp-1'>
-                        Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction
-                        disabled={isPendingDelete}
-                        onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+            <div className='flex justify-between items-center'>
+              <div className='flex gap-2'>
+                <Button
+                  size='icon'
+                  disabled={isPendingLike}
+                  onClick={() => mutateLike({ params: { _id } })}
+                  className='relative bg-blue-500 text-white hover:bg-blue-600 !fill-white'
+                >
+                  <LikeIcon className='!size-6' />
+                  <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-white text-blue-500 text-[10px]'>
+                    +{likes.length > 9 ? 9 : likes.length}
+                  </span>
+                </Button>
+                <Button
+                  size='icon'
+                  onClick={() => {}}
+                  className='bg-blue-500 text-white hover:bg-blue-600'
+                >
+                  <MessageCircleIcon className='!size-6' />
+                </Button>
+                {(nickname ?? '') === user.nickname && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        size='icon'
+                        onClick={() => {}}
+                        className='bg-red-400 text-white hover:bg-red-500'
                       >
-                        Continuar
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
+                        <TrashIcon className='!size-6' />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
+                        <AlertDialogDescription className='line-clamp-1'>
+                          Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          disabled={isPendingDelete}
+                          onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+                        >
+                          Continuar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
+              <p>
+                Autor <span className='italic font-bold'>{nickname}</span>
+              </p>
             </div>
           </div>
           <div className='flex-1 flex flex-col gap-3'>

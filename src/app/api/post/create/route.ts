@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/infra/mongodb'
 
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
-import { getUserNameFromNextRequest } from '@/lib/utils'
+import { getUserFromNextRequest } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData()
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
 
   const fileDoc = { filename: file.name, contentType: file.type, size: file.size, uploadDate: new Date(), content: Buffer.from(buffer) }
 
-  const username = getUserNameFromNextRequest(req)
+  const { nickname } = getUserFromNextRequest(req, process.env.ACCESS_TOKEN_SECRET!)
 
   try {
     const connection = await db()
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const bucketRes = await bucketsColletion.insertOne(fileDoc)
 
-    const body: Record<string, unknown> = { image: bucketRes.insertedId.toString(), user: username }
+    const body: Record<string, unknown> = { image: bucketRes.insertedId.toString(), nickname }
     for (const [key, value] of formData) if (key !== 'image') body[key] = value
 
     const res = await postsCollection.insertOne({ ...body })

@@ -22,8 +22,8 @@ export async function GET(req: NextRequest) {
   }
   const myPosts = query.get('myPosts')
   if (myPosts) {
-    const { name } = getUserFromNextRequest(req, process.env.ACCESS_TOKEN_SECRET!)
-    conditions.push({ user: { $eq: name } })
+    const { nickname } = getUserFromNextRequest(req, process.env.ACCESS_TOKEN_SECRET!)
+    conditions.push({ nickname: { $eq: nickname } })
   }
   // @example
   // {

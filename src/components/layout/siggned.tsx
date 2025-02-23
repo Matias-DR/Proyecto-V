@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 
-import { HeaderDropdownMenu } from '@/components/header/dropdown-menu'
+import HeaderDropdownMenu from '@/components/header/dropdown-menu'
 
 export interface Props {
   children: React.ReactNode

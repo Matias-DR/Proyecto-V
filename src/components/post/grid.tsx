@@ -13,9 +13,9 @@ const Grid = ({ posts, postId }: Props) => {
   return (
     <ScrollArea
       vpClassName='px-0'
-      className='w-full border'
+      className='w-full'
     >
-      <article className='w-full p-2 flex flex-wrap gap-6 bg-blue-300/20 rounded-xl shadow-lg'>
+      <article className='w-full p-2 flex flex-wrap justify-center gap-6 bg-blue-300/20 rounded-xl shadow-lg '>
         {posts?.map((post) => (
           <div
             key={post._id}

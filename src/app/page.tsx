@@ -23,7 +23,7 @@ export default function Home() {
         </div>
         <div className='relative z-10 h-full flex flex-col gap-2'>
           <section className='flex justify-between gap-2'>
-            <article className='flex-1 flex gap-4 bg-blue-300/10 rounded-lg'>
+            <article className='flex-1 pb-2 min-[557px]:pb-0 flex flex-col min-[557px]:flex-row items-center gap-4 bg-blue-300/10 rounded-lg'>
               <div className='size-48 p-2'>
                 <Image
                   src='/heroes/07.png'
@@ -34,12 +34,12 @@ export default function Home() {
                   className='rounded-md'
                 />
               </div>
-              <div className='flex flex-col justify-center'>
-                <h1 className='text-4xl font-bold'>Títutlo de bienvenida</h1>
-                <p className=''>Definición/Descripción de un héroe y su camino</p>
+              <div className='flex flex-col justify-center text-center min-[557px]:text-left'>
+                <h1 className='text-base min-[557px]:text-4xl font-bold'>Títutlo de bienvenida</h1>
+                <p className='text-xs min-[557px]:text-base'>Definición/Descripción de un héroe y su camino</p>
               </div>
             </article>
-            <article className='w-36 h-full pt-12 flex justify-center items-center overflow-hidden'>
+            <article className='hidden w-36 h-full pt-12 min-[557px]:flex justify-center items-center overflow-hidden'>
               <Link
                 href='/post/create'
                 className='hover:cursor-pointer hover:bg-transparent hover:scale-110 transition origin-center'
