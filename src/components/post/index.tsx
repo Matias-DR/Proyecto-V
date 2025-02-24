@@ -72,9 +72,9 @@ const Post = ({ data, className }: Props) => {
             </div>
           </div>
         </DialogTrigger>
-        <DialogContent className='max-w-[97.5%] flex flex-row bg-transparent border-blue-300'>
-          <div className='flex flex-col gap-2'>
-            <div className='relative !size-[28vw] overflow-hidden border border-blue-300 rounded-md'>
+        <DialogContent className='max-w-[65vw] md:max-w-none max-h-[80vh] flex flex-col md:flex-row bg-transparent border-blue-300 rounded-lg overflow-y-auto'>
+          <div className='flex flex-col items-center md:items-start gap-2'>
+            <div className='relative size-64 md:size-[28vw] overflow-hidden border border-blue-300 rounded-md'>
               <Image
                 src={`${FRONTEND_URL}/api/post/image/${image}`}
                 alt={name}
@@ -83,7 +83,7 @@ const Post = ({ data, className }: Props) => {
                 className='absolute object-contain'
               />
             </div>
-            <div className='flex justify-between items-center'>
+            <div className='w-64 flex justify-between items-center'>
               <div className='flex gap-2'>
                 <Button
                   size='icon'
@@ -141,12 +141,12 @@ const Post = ({ data, className }: Props) => {
           </div>
           <div className='flex-1 flex flex-col gap-3'>
             <DialogHeader>
-              <DialogTitle className='text-4xl line-clamp-1'>{name}</DialogTitle>
+              <DialogTitle className='text-4xl line-clamp-1 pt-3 md:pt-0'>{name}</DialogTitle>
               <ScrollArea
                 vpClassName='p-0'
                 className='flex-1'
               >
-                <DialogDescription className='max-h-[40vh] text-base text-white'>{description}</DialogDescription>
+                <DialogDescription className='max-h-[40vh] text-base text-white text-left'>{description}</DialogDescription>
               </ScrollArea>
             </DialogHeader>
             <div className='flex flex-col gap-2'>
