@@ -1,10 +1,10 @@
 'use client'
 
 import { ConfirmActionAlertDialog } from '@/components/shared/confirm-action-alert-dialog'
-import { usePostSignOutController } from '@/hooks/auth'
+import { usePostSignOut } from '@/hooks/auth'
 
 export const SignOutButton = () => {
-  const { mutate } = usePostSignOutController()
+  const { mutate } = usePostSignOut()
 
   return (
     <ConfirmActionAlertDialog

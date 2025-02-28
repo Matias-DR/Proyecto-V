@@ -8,11 +8,11 @@ import Grid from '@/components/post/grid'
 
 import { PostsProvider, usePostsContext } from '@/contexts/posts'
 import { Post } from '@/core/post'
-import { useGetPostsController } from '@/hooks/post'
+import { useGetPosts } from '@/hooks/post'
 
 const View = () => {
   const { params, setParams } = usePostsContext()
-  const { data, isError } = useGetPostsController({ params })
+  const { data, isError } = useGetPosts({ params })
 
   const myPosts = useSearchParams().get('my-posts') as Post['_id'] | null
 

@@ -8,17 +8,17 @@ import { z, ZodRawShape } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { CommonPostSignControllerProps } from '@/controllers/auth'
+import { CommonPostSignProps } from '@/controllers/auth'
 import { UseMutationResult } from '@tanstack/react-query'
 
 export interface Props {
-  usePostController: () => UseMutationResult<unknown, Error, CommonPostSignControllerProps, unknown>
+  usePost: () => UseMutationResult<unknown, Error, CommonPostSignProps, unknown>
   schema: ZodRawShape
 }
 
-export const SignForm = ({ usePostController, schema }: Props) => {
+export const SignForm = ({ usePost, schema }: Props) => {
   const [disabled, setDisabled] = useState(false)
-  const { mutate } = usePostController()
+  const { mutate } = usePost()
   const formSchema = useMemo(() => z.object(schema), [schema])
   const form = useForm<z.infer<typeof formSchema>>({ resolver: zodResolver(formSchema), defaultValues: { name: '', password: '' } })
 

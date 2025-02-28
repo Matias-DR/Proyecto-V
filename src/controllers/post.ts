@@ -14,23 +14,23 @@ import {
 } from '@/core/post/api'
 import { formatURL } from '@/lib/utils'
 
-export interface PostPostControllerProps {
+export interface PostPostProps {
   body: PostBodyPost
 }
 
-export interface GetPostsControllerProps {
+export interface GetPostsProps {
   params: GetParamsPosts
 }
 
-export interface DeletePostControllerProps {
+export interface DeletePostProps {
   params: DeleteParamsPost
 }
 
-export interface LikePostControllerProps {
+export interface LikePostProps {
   params: LikeParamsPost
 }
 
-export const postPostController = async ({ body }: PostPostControllerProps): Promise<PostResponsePost> => {
+export const postPost = async ({ body }: PostPostProps): Promise<PostResponsePost> => {
   const formData = new FormData()
   Object.entries(body).forEach(([key, value]) => {
     if (Array.isArray(value)) formData.append(key, JSON.stringify(value))
@@ -39,7 +39,7 @@ export const postPostController = async ({ body }: PostPostControllerProps): Pro
   return await api.post('/api/post/create', formData).then((res) => res.data)
 }
 
-export const getPostsController = async ({ params }: GetPostsControllerProps): Promise<GetResponsePosts> => {
+export const getPosts = async ({ params }: GetPostsProps): Promise<GetResponsePosts> => {
   const url = formatURL('/api/post/get', params)
   const res = await api
     .get<Array<Omit<Post, 'category' | 'region' | 'country'> & { category: string; region: string; country: string }>>(url)
@@ -55,12 +55,12 @@ export const getPostsController = async ({ params }: GetPostsControllerProps): P
   return adaptedPosts
 }
 
-export const deletePostController = async ({ params }: DeletePostControllerProps) => {
+export const deletePost = async ({ params }: DeletePostProps) => {
   const url = formatURL('/api/post/delete', params)
   return await api.delete<DeleteResponsePost>(url).then((res) => res.data)
 }
 
-export const likePostController = async ({ params }: LikePostControllerProps) => {
+export const likePost = async ({ params }: LikePostProps) => {
   const url = formatURL('/api/post/like', params)
   return await api.patch<LikeResponsePost>(url).then((res) => res.data)
 }

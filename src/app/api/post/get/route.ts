@@ -5,8 +5,6 @@ import db from '@/infra/mongodb'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 import { getUserFromNextRequest } from '@/lib/utils'
 
-// AGREGAR EL CASO "myPosts"
-
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams
 

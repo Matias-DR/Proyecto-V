@@ -13,17 +13,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { Textarea } from '@/components/ui/textarea'
-import { PostPostControllerProps } from '@/controllers/post'
+import { PostPostProps } from '@/controllers/post'
 import { CommonBodyPost } from '@/core/post/api'
 import { CATEGORIES, CONTINENTS, COUNTRIES } from '@/lib/constants'
 
 export interface Props {
-  usePostController: () => UseMutationResult<unknown, Error, PostPostControllerProps, unknown>
+  usePost: () => UseMutationResult<unknown, Error, PostPostProps, unknown>
   schema: ZodRawShape
 }
 
-export function PostForm({ usePostController, schema }: Props) {
-  const { mutate, isPending, isSuccess } = usePostController()
+export function PostForm({ usePost, schema }: Props) {
+  const { mutate, isPending, isSuccess } = usePost()
   const formSchema = useMemo(() => z.object(schema), [schema])
 
   const form = useForm<z.infer<typeof formSchema>>({

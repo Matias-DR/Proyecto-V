@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { z } from 'zod'
 
 import { SignForm } from '@/components/auth/sign/form'
-import { usePostSignUpController } from '@/hooks/auth'
+import { usePostSignUp } from '@/hooks/auth'
 
 const Page = () => {
   return (
@@ -21,7 +21,7 @@ const Page = () => {
         </Link>
       </p>
       <SignForm
-        usePostController={usePostSignUpController}
+        usePost={usePostSignUp}
         schema={{
           name: z.string().min(4, { message: 'Mínimo 4 caracteres.' }),
           password: z.string().min(4, { message: 'Mínimo 4 caracteres.' }).max(8, { message: 'Máximo 8 caracteres.' })

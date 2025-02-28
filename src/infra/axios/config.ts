@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 
-import { postRefreshController } from '@/controllers/auth'
+import { postRefresh } from '@/controllers/auth'
 
 const client = (api: AxiosInstance) => {
   api.interceptors.request.use(
@@ -29,7 +29,7 @@ const client = (api: AxiosInstance) => {
         originalRequest._retry = true // Bandera para evitar bucles infinitos
 
         try {
-          await postRefreshController()
+          await postRefresh()
           // Reintentamos la solicitud original
           return api.request(originalRequest)
         } catch (err) {

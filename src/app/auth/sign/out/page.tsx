@@ -3,10 +3,10 @@
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 
-import { usePostSignOutController } from '@/hooks/auth'
+import { usePostSignOut } from '@/hooks/auth'
 
 const Page = () => {
-  const { mutate } = usePostSignOutController()
+  const { mutate } = usePostSignOut()
 
   useEffect(() => {
     mutate()

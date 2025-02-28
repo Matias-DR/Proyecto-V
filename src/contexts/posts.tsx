@@ -4,7 +4,7 @@ import { createContext, useContext, useState, type ReactNode } from 'react'
 
 import { GetParamsPosts } from '@/core/post/api'
 import { User } from '@/core/user'
-import { useGetUserController } from '@/hooks/user'
+import { useGetUser } from '@/hooks/user'
 
 interface PostsContextType {
   params: GetParamsPosts
@@ -16,7 +16,7 @@ const PostsContext = createContext<PostsContextType | undefined>(undefined)
 
 export const PostsProvider = ({ children }: { children: ReactNode }) => {
   const [params, setParams] = useState<GetParamsPosts>({})
-  const { data: user } = useGetUserController()
+  const { data: user } = useGetUser()
 
   return user && <PostsContext.Provider value={{ params, setParams, user }}>{children}</PostsContext.Provider>
 }

@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { PostForm } from '@/components/post/form'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { usePostPostController } from '@/hooks/post'
+import { usePostPost } from '@/hooks/post'
 import { CATEGORIES, CONTINENTS, COUNTRIES } from '@/lib/constants'
 
 const Page = () => {
@@ -20,7 +20,7 @@ const Page = () => {
           PARA PUBLICARLO!
         </h1>
         <PostForm
-          usePostController={usePostPostController}
+          usePost={usePostPost}
           schema={{
             name: z.string().min(3, { message: 'Mínimo 3 caracteres.' }),
             description: z.string().min(24, { message: 'Mínimo 24 caracteres.' }),

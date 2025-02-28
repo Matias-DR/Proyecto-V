@@ -3,25 +3,25 @@
 import { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 
-import { postRefreshController, postSignInController, postSignOutController, postSignUpController } from '@/controllers/auth'
+import { postRefresh, postSignIn, postSignOut, postSignUp } from '@/controllers/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useToast } from './use-toast'
 
-export interface UsePostRefreshController {
+export interface UsePostRefresh {
   nextURL: string
 }
 
-export const usePostSignUpController = () => {
+export const usePostSignUp = () => {
   const { toast } = useToast()
   const { push } = useRouter()
 
   const mutation = useMutation({
-    mutationFn: postSignUpController,
+    mutationFn: postSignUp,
     onSuccess: () => push('/auth/sign/in?registered=true'),
     onError(error) {
       if (error instanceof AxiosError) {
         if (error.status === 409) toast({ title: 'Error', description: 'Usuario existente. Por favor ingrese otro nombre.' })
-        else toast({ title: 'Error', description: 'No se pudo crear el usuario. Por favor intente mas tarde.' })
+        else toast({ title: 'Error', description: 'No se pudo crear el usuario. Por favor intente más tarde.' })
       }
     }
   })
@@ -29,17 +29,17 @@ export const usePostSignUpController = () => {
   return mutation
 }
 
-export const usePostSignInController = () => {
+export const usePostSignIn = () => {
   const { toast } = useToast()
   const { push } = useRouter()
 
   const mutation = useMutation({
-    mutationFn: postSignInController,
+    mutationFn: postSignIn,
     onSuccess: () => push('/'),
     onError(error) {
       if (error instanceof AxiosError) {
         if (error.status === 404) toast({ title: 'Error', description: 'Nombre y/o contraseña incorrecta.' })
-        else toast({ title: 'Error', description: 'No se pudo iniciar sesión. Por favor intente mas tarde.' })
+        else toast({ title: 'Error', description: 'No se pudo iniciar sesión. Por favor intente más tarde.' })
       }
     }
   })
@@ -47,12 +47,12 @@ export const usePostSignInController = () => {
   return mutation
 }
 
-export const usePostSignOutController = () => {
+export const usePostSignOut = () => {
   const { toast } = useToast()
   const { push } = useRouter()
 
   const mutation = useMutation({
-    mutationFn: postSignOutController,
+    mutationFn: postSignOut,
     onSuccess: () => push('/auth/sign/in'),
     onError: () => toast({ title: 'Error', description: 'Ah ocurrido un error inesperado.' })
   })
@@ -60,12 +60,12 @@ export const usePostSignOutController = () => {
   return mutation
 }
 
-export const usePostRefreshController = ({ nextURL }: UsePostRefreshController) => {
+export const usePostRefresh = ({ nextURL }: UsePostRefresh) => {
   const { toast } = useToast()
   const { replace } = useRouter()
 
   const mutation = useMutation({
-    mutationFn: postRefreshController,
+    mutationFn: postRefresh,
     onSuccess: () => replace(nextURL),
     onError: () => toast({ title: 'Error', description: 'Ah ocurrido un error inesperado.' })
   })

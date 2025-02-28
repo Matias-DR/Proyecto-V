@@ -1,7 +1,7 @@
 'use client'
 
 import { SignForm } from '@/components/auth/sign/form'
-import { usePostSignInController } from '@/hooks/auth'
+import { usePostSignIn } from '@/hooks/auth'
 import Link from 'next/link'
 import { z } from 'zod'
 
@@ -19,7 +19,7 @@ const Page = () => {
         </Link>
       </p>
       <SignForm
-        usePostController={usePostSignInController}
+        usePost={usePostSignIn}
         schema={{
           name: z.string({ message: 'Inrese un nombre' }),
           password: z.string({ message: 'Inrese una contraseña' })

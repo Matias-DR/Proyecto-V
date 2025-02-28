@@ -2,9 +2,10 @@
 
 import Image from 'next/image'
 
-import { MessageCircleIcon, ThumbsDownIcon, ThumbsUpIcon, TrashIcon } from 'lucide-react'
+import { LoaderCircleIcon, MessageCircleIcon, ThumbsDownIcon, ThumbsUpIcon, TrashIcon } from 'lucide-react'
 import { HTMLAttributes, useMemo, useRef } from 'react'
 
+import { Comment } from '@/components/post/comment'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,9 +23,11 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, Di
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { usePostsContext } from '@/contexts/posts'
 import { Post as PostType } from '@/core/post'
-import { useDeletePostController, useLikeController } from '@/hooks/post'
+import { useGetComments } from '@/hooks/comment'
+import { useDeletePost, useLike } from '@/hooks/post'
 import { FRONTEND_URL } from '@/infra/config'
 import { cn } from '@/lib/utils'
+import { CommentForm } from './comment/form'
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   data: PostType
@@ -38,8 +41,9 @@ const Post = ({ data, className }: Props) => {
 
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  const { mutate: mutateDelete, isPending: isPendingDelete } = useDeletePostController()
-  const { mutate: mutateLike, isPending: isPendingLike } = useLikeController()
+  const { data: comments, isError: commentsIsError, isLoading: commentsIsLoading } = useGetComments({ params: { post: _id } })
+  const { mutate: mutateDelete, isPending: isPendingDelete } = useDeletePost()
+  const { mutate: mutateLike, isPending: isPendingLike } = useLike()
 
   const LikeIcon = useMemo(() => (likes.includes(user.nickname) ? ThumbsDownIcon : ThumbsUpIcon), [likes, user.nickname])
 
@@ -72,131 +76,159 @@ const Post = ({ data, className }: Props) => {
             </div>
           </div>
         </DialogTrigger>
-        <DialogContent className='max-w-[65vw] md:max-w-none max-h-[80vh] flex flex-col md:flex-row bg-transparent border-blue-300 rounded-lg overflow-y-auto'>
-          <div className='flex flex-col items-center md:items-start gap-2'>
-            <div className='relative size-64 md:size-[28vw] overflow-hidden border border-blue-300 rounded-md'>
-              <Image
-                src={`${FRONTEND_URL}/api/post/image/${image}`}
-                alt={name}
-                fill
-                sizes='100%'
-                className='absolute object-contain'
-              />
-            </div>
-            <div className='w-64 flex justify-between items-center'>
-              <div className='flex gap-2'>
-                <Button
-                  size='icon'
-                  disabled={isPendingLike}
-                  onClick={() => mutateLike({ params: { _id } })}
-                  className='relative bg-blue-500 text-white hover:bg-blue-600 !fill-white'
-                >
-                  <LikeIcon className='!size-6' />
-                  <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-white text-blue-500 text-[10px]'>
-                    +{likes.length > 9 ? 9 : likes.length}
-                  </span>
-                </Button>
-                <Button
-                  size='icon'
-                  onClick={() => {}}
-                  className='bg-blue-500 text-white hover:bg-blue-600'
-                >
-                  <MessageCircleIcon className='!size-6' />
-                </Button>
-                {(nickname ?? '') === user.nickname && (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        size='icon'
-                        onClick={() => {}}
-                        className='bg-red-400 text-white hover:bg-red-500'
-                      >
-                        <TrashIcon className='!size-6' />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
-                        <AlertDialogDescription className='line-clamp-1'>
-                          Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction
-                          disabled={isPendingDelete}
-                          onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
-                        >
-                          Continuar
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
+        <DialogContent className='max-w-[65vw] md:max-w-[90vw] max-h-[80vh] flex flex-col bg-transparent border-blue-300 rounded-lg overflow-y-auto overflow-x-hidden'>
+          <div className='flex flex-col md:flex-row gap-2'>
+            <div className='flex flex-col items-center md:items-start gap-2'>
+              <div className='relative size-64 md:size-[28vw] max-w-full overflow-hidden border border-blue-300 rounded-md'>
+                <Image
+                  src={`${FRONTEND_URL}/api/post/image/${image}`}
+                  alt={name}
+                  fill
+                  sizes='100%'
+                  className='absolute object-contain'
+                />
               </div>
-              <p>
-                Autor <span className='italic font-bold'>{nickname}</span>
-              </p>
+              <div className='w-64 md:w-full max-w-full flex justify-between items-center'>
+                <div className='flex gap-2'>
+                  <Button
+                    size='icon'
+                    disabled={isPendingLike}
+                    onClick={() => mutateLike({ params: { _id } })}
+                    className='relative bg-blue-500 text-white hover:bg-blue-600 !fill-white'
+                  >
+                    <LikeIcon className='!size-6' />
+                    <span className='absolute -top-1 -right-1 inline-flex w-auto h-3 px-0.5 pb-[14px] rounded-full bg-white text-blue-500 text-[10px]'>
+                      +{likes.length > 9 ? 9 : likes.length}
+                    </span>
+                  </Button>
+                  <Button
+                    size='icon'
+                    onClick={() => {}}
+                    className='bg-blue-500 text-white hover:bg-blue-600'
+                  >
+                    <MessageCircleIcon className='!size-6' />
+                  </Button>
+                  {(nickname ?? '') === user.nickname && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size='icon'
+                          onClick={() => {}}
+                          className='bg-red-400 text-white hover:bg-red-500'
+                        >
+                          <TrashIcon className='!size-6' />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Está seguro que desea realizar la siguiente acción?</AlertDialogTitle>
+                          <AlertDialogDescription className='line-clamp-1'>
+                            Eliminar la publicación <span className='font-bold'>{`"${name}"`}</span>.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction
+                            disabled={isPendingDelete}
+                            onClick={() => mutateDelete({ params: { _id } }, { onSuccess: () => closeRef && closeRef.current?.click() })}
+                          >
+                            Continuar
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
+                <p>
+                  Autor <span className='italic font-bold'>{nickname}</span>
+                </p>
+              </div>
+            </div>
+            <div className='flex-1 flex flex-col gap-3'>
+              <DialogHeader>
+                <DialogTitle className='text-4xl line-clamp-1 pt-3 md:pt-0'>{name}</DialogTitle>
+                <ScrollArea
+                  vpClassName='p-0'
+                  className='flex-1'
+                >
+                  <DialogDescription className='max-h-[40vh] text-base text-white text-left'>{description}</DialogDescription>
+                </ScrollArea>
+              </DialogHeader>
+              <div className='flex flex-col gap-2'>
+                <ScrollArea
+                  vpClassName='p-0'
+                  className='flex-1 pb-3'
+                >
+                  <div className='max-w-[64vw] flex gap-1'>
+                    <span>Categorías:</span>
+                    {category &&
+                      category.map((category) => (
+                        <Badge key={`${category}-${_id}`}>
+                          <span className='truncate'>{category}</span>
+                        </Badge>
+                      ))}
+                  </div>
+                  <ScrollBar orientation='horizontal' />
+                </ScrollArea>
+                <ScrollArea
+                  vpClassName='p-0'
+                  className='flex-1 pb-3'
+                >
+                  <div className='max-w-[64vw] flex gap-1'>
+                    <span>Continentes:</span>
+                    {region &&
+                      region.map((region) => (
+                        <Badge key={`${region}-${_id}`}>
+                          <span className='truncate'>{region}</span>
+                        </Badge>
+                      ))}
+                  </div>
+                  <ScrollBar orientation='horizontal' />
+                </ScrollArea>
+
+                <ScrollArea
+                  vpClassName='p-0'
+                  className='flex-1 pb-3'
+                >
+                  <div className='max-w-[64vw] flex gap-1'>
+                    <span>Países:</span>
+                    {country &&
+                      country.map((country) => (
+                        <Badge key={`${country}-${_id}`}>
+                          <span className='truncate'>{country}</span>
+                        </Badge>
+                      ))}
+                  </div>
+                  <ScrollBar orientation='horizontal' />
+                </ScrollArea>
+              </div>
             </div>
           </div>
-          <div className='flex-1 flex flex-col gap-3'>
-            <DialogHeader>
-              <DialogTitle className='text-4xl line-clamp-1 pt-3 md:pt-0'>{name}</DialogTitle>
-              <ScrollArea
-                vpClassName='p-0'
-                className='flex-1'
-              >
-                <DialogDescription className='max-h-[40vh] text-base text-white text-left'>{description}</DialogDescription>
-              </ScrollArea>
-            </DialogHeader>
-            <div className='flex flex-col gap-2'>
-              <ScrollArea
-                vpClassName='p-0'
-                className='flex-1 pb-3'
-              >
-                <div className='max-w-[64vw] flex gap-1'>
-                  <span>Categorías:</span>
-                  {category &&
-                    category.map((category) => (
-                      <Badge key={`${category}-${_id}`}>
-                        <span className='truncate'>{category}</span>
-                      </Badge>
-                    ))}
-                </div>
-                <ScrollBar orientation='horizontal' />
-              </ScrollArea>
-              <ScrollArea
-                vpClassName='p-0'
-                className='flex-1 pb-3'
-              >
-                <div className='max-w-[64vw] flex gap-1'>
-                  <span>Continentes:</span>
-                  {region &&
-                    region.map((region) => (
-                      <Badge key={`${region}-${_id}`}>
-                        <span className='truncate'>{region}</span>
-                      </Badge>
-                    ))}
-                </div>
-                <ScrollBar orientation='horizontal' />
-              </ScrollArea>
-
-              <ScrollArea
-                vpClassName='p-0'
-                className='flex-1 pb-3'
-              >
-                <div className='max-w-[64vw] flex gap-1'>
-                  <span>Países:</span>
-                  {country &&
-                    country.map((country) => (
-                      <Badge key={`${country}-${_id}`}>
-                        <span className='truncate'>{country}</span>
-                      </Badge>
-                    ))}
-                </div>
-                <ScrollBar orientation='horizontal' />
-              </ScrollArea>
-            </div>
+          <div className='flex flex-col gap-4'>
+            <CommentForm _id={_id} />
+            {comments ? (
+              comments.length > 0 ? (
+                comments.map((comment) => (
+                  <Comment
+                    _id={comment._id}
+                    post={comment.post}
+                    user={nickname}
+                    comment={comment.comment}
+                    key={`comment-${comment._id}-on-${_id}`}
+                  />
+                ))
+              ) : (
+                <p className='pl-3 text-sm text-muted-foreground'>Sin comentarios...</p>
+              )
+            ) : commentsIsError ? (
+              <p>Ha ocurrido un error al cargar los comentarios.</p>
+            ) : commentsIsLoading ? (
+              <div>
+                <LoaderCircleIcon className='size-12 mx-auto animate-spin-fast transition' />
+              </div>
+            ) : (
+              <p className='pl-3 text-sm text-muted-foreground'>Sin comentarios...</p>
+            )}
           </div>
         </DialogContent>
       </Dialog>
