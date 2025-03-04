@@ -20,4 +20,4 @@ async function handler(req: NextRequest) {
   }
 }
 
-export const POST = AuthVerify(handler)
+export const GET = AuthVerify(handler)
