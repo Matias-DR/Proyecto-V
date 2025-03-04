@@ -17,19 +17,24 @@ import { Button } from '@/components/ui/button'
 import { usePostsContext } from '@/contexts/posts'
 import { Comment as CommentType } from '@/core/comment'
 import { useDeleteComment } from '@/hooks/comment'
+import { cn } from '@/lib/utils'
 
-export type Props = CommentType
+export interface Props extends CommentType {
+  color: string
+}
 
-export const Comment = ({ _id, post, user, comment }: Props) => {
+export const Comment = ({ _id, post, user, comment, color }: Props) => {
   const { user: currentUser } = usePostsContext()
   const { mutate, isPending } = useDeleteComment({ params: { _id, post } })
 
   return (
     <div className='relative pt-6 flex flex-col justify-center gap-2 slide-left'>
-      <p className='absolute -top-0 w-min px-2 font-bold italic bg-blue-950 rounded-t-md border-l border-t border-r border-blue-400'>
+      <p className={cn('absolute -top-0 w-min px-2 font-bold italic rounded-t-md border-l border-t border-r border-blue-400', color)}>
         {user}
       </p>
-      <div className='w-full pr-1 py-1 flex justify-between items-center gap-2 bg-blue-950 rounded-tr-md rounded-b-md border border-blue-400'>
+      <div
+        className={cn('w-full pr-1 py-1 flex justify-between items-center gap-2 rounded-tr-md rounded-b-md border border-blue-400', color)}
+      >
         <p className='w-full pl-6 pr-2'>{comment}</p>
         {currentUser.nickname === user && (
           <AlertDialog>

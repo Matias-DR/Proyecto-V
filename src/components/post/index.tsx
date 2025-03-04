@@ -29,6 +29,14 @@ import { FRONTEND_URL } from '@/infra/config'
 import { cn } from '@/lib/utils'
 import { CommentForm } from './comment/form'
 
+const COLORS = [
+  'bg-[#E2CFEA] text-blue-950',
+  'bg-[#A06CD5] text-blue-950',
+  'bg-[#6247AA] text-blue-50',
+  'bg-[#102B3F] text-blue-100',
+  'bg-[#062726] text-blue-100'
+]
+
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   data: PostType
 }
@@ -46,6 +54,21 @@ const Post = ({ data, className }: Props) => {
   const { mutate: mutateLike, isPending: isPendingLike } = useLike()
 
   const LikeIcon = useMemo(() => (likes.includes(user.nickname) ? ThumbsDownIcon : ThumbsUpIcon), [likes, user.nickname])
+
+  const bgColors = useMemo(() => {
+    const colors = []
+    if (comments && comments.length > 0) {
+      colors.push(COLORS[Math.floor(Math.random() * 5)])
+      for (let i = 1; i < comments.length; i++) {
+        let color = COLORS[Math.floor(Math.random() * 5)]
+        while (color === colors[colors.length - 1]) {
+          color = COLORS[Math.floor(Math.random() * 5)]
+        }
+        colors.push(color)
+      }
+    }
+    return colors
+  }, [comments])
 
   return (
     <div className={cn('size-full p-2 flex flex-col gap-1 border border-blue-300 rounded-lg', className)}>
@@ -208,8 +231,9 @@ const Post = ({ data, className }: Props) => {
             <CommentForm _id={_id} />
             {comments ? (
               comments.length > 0 ? (
-                comments.map((comment) => (
+                comments.map((comment, index) => (
                   <Comment
+                    color={bgColors[index]}
                     {...comment}
                     key={`comment-${comment._id}-on-${_id}`}
                   />
