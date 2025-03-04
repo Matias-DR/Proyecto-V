@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
 
+import { AuthVerify } from '@/app/api/auth'
 import { DeleteParamsComment } from '@/core/comment/api'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 
-export async function DELETE(req: NextRequest) {
+async function handler(req: NextRequest) {
   const query = req.nextUrl.searchParams
   const _id = query.get('_id') as DeleteParamsComment['_id']
 
@@ -19,3 +20,5 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json(false, { status: 400 })
   }
 }
+
+export const DELETE = AuthVerify(handler)

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
 
+import { AuthVerify } from '@/app/api/auth'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 
-export async function GET(req: NextRequest) {
+async function handler(req: NextRequest) {
   const query = req.nextUrl.searchParams
 
   const post = query.get('post')
@@ -18,3 +19,5 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({}, { status: 400 })
   }
 }
+
+export const POST = AuthVerify(handler)

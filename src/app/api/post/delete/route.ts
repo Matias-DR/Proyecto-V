@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { AuthVerify } from '@/app/api/auth'
 import { dbClient } from '@/infra/mongodb'
-
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 
-export async function DELETE(req: NextRequest) {
+async function handler(req: NextRequest) {
   const _id = req.nextUrl.searchParams.get('_id') as string
 
   try {
@@ -35,4 +35,4 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export const config = { api: { bodyParser: false } }
+export const DELETE = AuthVerify(handler)

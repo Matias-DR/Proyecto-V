@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
 
+import { AuthVerify } from '@/app/api/auth'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 import { getUserFromNextRequest } from '@/lib/utils'
 
-export async function POST(req: NextRequest) {
+async function handler(req: NextRequest) {
   const formData = await req.formData()
   const file = formData.get('image') as File
   const buffer = await file.arrayBuffer()
@@ -35,5 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({}, { status: 500 })
   }
 }
+
+export const POST = AuthVerify(handler)
 
 export const config = { api: { bodyParser: false } }

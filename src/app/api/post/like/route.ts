@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
 
+import { AuthVerify } from '@/app/api/auth'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 import { getUserFromNextRequest } from '@/lib/utils'
 
-export async function PATCH(req: NextRequest) {
+async function handler(req: NextRequest) {
   const _id = req.nextUrl.searchParams.get('_id') as string
   const { nickname } = getUserFromNextRequest(req, process.env.ACCESS_TOKEN_SECRET!)
 
@@ -34,4 +35,4 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
-export const config = { api: { bodyParser: false } }
+export const PATCH = AuthVerify(handler)

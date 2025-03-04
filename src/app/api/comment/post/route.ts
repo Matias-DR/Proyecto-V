@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
 
+import { AuthVerify } from '@/app/api/auth'
 import { Comment } from '@/core/comment'
 import { PostBodyComment, PostParamsComment } from '@/core/comment/api'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 import { getUserFromNextRequest } from '@/lib/utils'
 
-export async function POST(req: NextRequest) {
+async function handler(req: NextRequest) {
   const query = req.nextUrl.searchParams
   const post = query.get('post') as PostParamsComment['post']
   const body = (await req.json()) as PostBodyComment
@@ -23,3 +24,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(false, { status: 400 })
   }
 }
+
+export const POST = AuthVerify(handler)
