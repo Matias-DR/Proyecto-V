@@ -16,16 +16,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { usePostsContext } from '@/contexts/posts'
 import { Comment as CommentType } from '@/core/comment'
-import { User } from '@/core/user'
 import { useDeleteComment } from '@/hooks/comment'
-import { Post } from '@/core/post'
 
-export interface Props {
-  _id: CommentType['_id']
-  post: Post['_id']
-  user: User['nickname']
-  comment: CommentType['comment']
-}
+export type Props = CommentType
 
 export const Comment = ({ _id, post, user, comment }: Props) => {
   const { user: currentUser } = usePostsContext()

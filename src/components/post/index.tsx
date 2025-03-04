@@ -210,10 +210,7 @@ const Post = ({ data, className }: Props) => {
               comments.length > 0 ? (
                 comments.map((comment) => (
                   <Comment
-                    _id={comment._id}
-                    post={comment.post}
-                    user={nickname}
-                    comment={comment.comment}
+                    {...comment}
                     key={`comment-${comment._id}-on-${_id}`}
                   />
                 ))
