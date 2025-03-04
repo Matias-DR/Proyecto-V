@@ -21,11 +21,9 @@ export const verifyPassword = async (password: string, hashedPassword: string): 
   return bcryptjs.compareSync(password, hashedPassword)
 }
 
-export const generateAccessToken = (user: User) => {
-  return sign({ user }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' })
-}
+export const generateAccessToken = (user: User) => sign({ user }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' })
 
-export const generateRefreshToken = (user: User) => sign({ user }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '1d' })
+export const generateRefreshToken = (user: User) => sign({ user }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '7d' })
 
 export const generateRandomNickname = () => {
   const word = faker.word.noun({ length: { min: 3, max: 4 } })
@@ -39,13 +37,13 @@ export const setTokensOnNextResponse = (res: NextResponse, access: string, refre
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 24 * 60 * 60
+    maxAge: 60 * 15
   })
   res.cookies.set('refresh', refresh, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 24 * 60 * 60
+    maxAge: 60 * 60 * 24 * 7
   })
 }
 

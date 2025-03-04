@@ -4,11 +4,20 @@ import { NextResponse } from 'next/server'
 import { FRONTEND_URL } from './infra/config'
 
 export function middleware(req: NextRequest) {
-  const access = req.cookies.get('access')?.value
-
+  const cookie = req.cookies.get('refresh')
   const isAuth = req.nextUrl.pathname.startsWith('/auth')
-  if (isAuth && access) return NextResponse.redirect(FRONTEND_URL!)
-  if (!isAuth && !access) return NextResponse.redirect(`${FRONTEND_URL!}/auth/sign/in`)
+  const isRefresh = req.nextUrl.pathname === '/api/auth/refresh'
+
+  // No interferimos refresh
+  if (isRefresh) return NextResponse.next()
+
+  if (isAuth) {
+    // Si estamos en auth y hay refresh lo devolvemos al inicio
+    if (cookie && cookie.value) return NextResponse.redirect(FRONTEND_URL!)
+  } else {
+    // Si no estamos en auth y no hay refresh lo devolvemos al ingreso
+    if (!cookie || !cookie.value) return NextResponse.redirect(`${FRONTEND_URL!}/auth/sign/in`)
+  }
 
   return NextResponse.next()
 }

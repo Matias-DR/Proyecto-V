@@ -26,11 +26,10 @@ export const postSignIn = async ({ body }: PostSignInProps): Promise<void> => {
   return await api.post('/api/auth/sign/in', body).then((res) => res.data)
 }
 
-export const postRefresh = async (): Promise<void> => {
-  return await fetch('/api/auth/refresh', {
+export const postSignOut = async (): Promise<void> => await api.post('/api/auth/sign/out').then((res) => res.data)
+
+export const postRefresh = async (): Promise<void> =>
+  await fetch('/api/auth/refresh', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' }
   }).then(async (res) => await res.json().then((res) => res.data))
-}
-
-export const postSignOut = async (): Promise<void> => await api.post('/api/auth/sign/out').then((res) => res.data)

@@ -3,6 +3,7 @@ import { WithId } from 'mongodb'
 import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
+
 import { Session } from '@/core/auth'
 import { User } from '@/core/user'
 import { FRONTEND_URL } from '@/infra/config'
@@ -11,8 +12,11 @@ import { generateAccessToken, generateRefreshToken, setTokensOnNextResponse } fr
 
 export async function POST(req: NextRequest) {
   // Si no hay refresh, redireccionamos a sign/out
-  const refresh = req.cookies.get('refresh')?.value
-  if (!refresh) return NextResponse.redirect(`${FRONTEND_URL}/auth/sign/out`)
+  const cookie = req.cookies.get('refresh')
+
+  if (!cookie || !cookie.value) return NextResponse.redirect(`${FRONTEND_URL}/auth/sign/out`)
+
+  const refresh = cookie.value
 
   try {
     const connection = await db()
@@ -24,10 +28,8 @@ export async function POST(req: NextRequest) {
       const decoded = verify(refresh, process.env.REFRESH_TOKEN_SECRET!) as JwtPayload & { user: User }
       user = decoded.user
     } catch (error) {
-      if (error instanceof TokenExpiredError || error instanceof JsonWebTokenError) {
-        // Intentamos eliminar la sesión si el token es inválido o expiró
-        await sessionsCollection.deleteOne({ refresh })
-      }
+      // Intentamos eliminar la sesión si el token es inválido o expiró
+      if (error instanceof TokenExpiredError || error instanceof JsonWebTokenError) await sessionsCollection.deleteOne({ refresh })
       return NextResponse.json({}, { status: 403 })
     }
 
@@ -43,13 +45,14 @@ export async function POST(req: NextRequest) {
 
     const sessionsRes = await sessionsCollection.updateOne({ _id: session._id }, { $set: { refresh: newRefresh, updatedAt: new Date() } })
 
-    if (!sessionsRes.modifiedCount) return NextResponse.json({}, { status: 400 }) // No se pudo actualizar
+    // No se pudo actualizar
+    if (!sessionsRes.modifiedCount) return NextResponse.json({}, { status: 400 })
 
     const res = NextResponse.json({}, { status: 200 })
     setTokensOnNextResponse(res, newAccess, newRefresh)
     return res
   } catch {
-    // Error de conexión u otro problema inesperado
+    // Error de conexión u otro problema inesperado, por ejemplo pudo haber fallado deleteOne, findOne o updateOne
     return NextResponse.json({}, { status: 400 })
   }
 }

@@ -6,9 +6,11 @@ import db from '@/infra/mongodb'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 
 export async function POST(req: NextRequest) {
-  const refresh = req.cookies.get('refresh')?.value
+  const cookie = req.cookies.get('refresh')
 
-  if (!refresh) return NextResponse.json({}, { status: 200 })
+  if (!cookie || !cookie.value) return NextResponse.json({}, { status: 200 })
+
+  const refresh = cookie.value
 
   try {
     const connection = await db()

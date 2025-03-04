@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import db from '@/infra/mongodb'
 
+import { AuthVerify } from '@/app/api/auth'
 import { COLLECTION_NAMES } from '@/infra/mongodb/config'
 import { getUserFromNextRequest } from '@/lib/utils'
 
-export async function GET(req: NextRequest) {
+async function handler(req: NextRequest) {
   const query = req.nextUrl.searchParams
 
   const conditions = []
@@ -65,5 +66,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({}, { status: 400 })
   }
 }
+
+export const GET = AuthVerify(handler)
 
 export const config = { api: { bodyParser: false } }

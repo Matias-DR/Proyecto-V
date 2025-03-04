@@ -23,16 +23,17 @@ const client = (api: AxiosInstance) => {
     async (error) => {
       const originalRequest = error.config
 
-      // console.log('TENEMOS ESTE CODIGO DE ERROR', error.response && error.response.status)
-      // Si el error es 401, refrescamos los tokens
-      if (error.response && error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true // Bandera para evitar bucles infinitos
+      // Si el error es 401 y no viene de auth, refrescamos los tokens
+      if (error.response && error.response.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('auth')) {
+        // Bandera para evitar bucles infinitos
+        originalRequest._retry = true
 
         try {
           await postRefresh()
           // Reintentamos la solicitud original
-          return api.request(originalRequest)
+          return api(originalRequest)
         } catch (err) {
+          window.location.href = '/auth/sign/in'
           return Promise.reject(err)
         }
       }
